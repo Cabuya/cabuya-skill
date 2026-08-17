@@ -16,6 +16,7 @@ entirely from being unmodified, the other is a summary written here.
 | `examples/invalid/` | **Vendored.** Three teaching failures. | Explaining a violation. Each carries a `$comment` naming every violation and its rule |
 | `spec/VERSION` | The spec MINOR vendored here. | Checking you are answering about the right version |
 | `spec/SOURCE` | Repo, ref and commit this copy came from. | Proving provenance; reporting a suspected drift |
+| `spec/SPA_EXCLUSIONS.md` | **Generated** from the validator package by `sync-spec.sh`. | The catch-all fix for a stack. Quote it; never restate it |
 | `spec/CHECKSUMS.txt` | SHA-256 of every vendored file. | Nothing — it is for `verify-integrity.sh` |
 
 The full normative text — all nine sections, not just §7 — lives at
@@ -52,6 +53,26 @@ check passes and the tree is wrong.
 it stop. That converts a detected problem into an undetected one. Either
 somebody edited a vendored file — find out who and why — or a sync landed
 without its checksums, which is the same commit's job.
+
+## What must be re-synced when upstream changes
+
+`sync-spec.sh` regenerates all of it, so this is a list of what *depends* on
+upstream rather than a list of manual chores:
+
+| Vendored here | Comes from |
+|---|---|
+| `spec/schemas/`, `spec/vocab/` | `spec/schemas/0.1/`, `spec/vocab/` |
+| `spec/EXCLUSIONS.md` | `spec/versions/0.1/7-normative-exclusions.md` |
+| `examples/` | `spec/examples/0.1/` |
+| `spec/SPA_EXCLUSIONS.md` | `packages/validator/src/spa-exclusions.ts` |
+
+The last one is the odd one out and worth knowing about: the catch-all fixes
+ship in **four** places — the validator CLI's `init --framework`, cabuya.org's
+quickstart, this pack's `spec/SPA_EXCLUSIONS.md`, and the stack guides that
+quote it. Generating our copy is what keeps the fourth from becoming the one
+that drifts. A guide that restates the fix in its own words defeats that, which
+is why `tests/stack-guides.bats` checks each guide references the generated
+file.
 
 ## The two version streams
 

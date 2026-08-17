@@ -33,6 +33,13 @@ knows whether the pack applies to them.
   checksums.
 - `shared/spec-paths.md` — what is vendored versus authored, the V1–V7
   versioning rules, and the resolution order when sources disagree.
+- `implement/stacks/` — four guides: Next.js + Supabase/Prisma, Vite SPA +
+  Supabase, PHP server-rendered, and a spreadsheet with no backend at all
+  (the HXL on-ramp). One skeleton each, and a guide-authoring contract for
+  contributors.
+- `spec/SPA_EXCLUSIONS.md` — the catch-all fixes, **generated** from the
+  validator package rather than copied, so the pack's copy cannot become the
+  one that drifts.
 - Repository skeleton, Apache-2.0 licence, and the standards layer: CI running
   frontmatter validation, shellcheck, bats and a Markdown link check;
   issue-form templates; dependabot; a pull-request checklist.

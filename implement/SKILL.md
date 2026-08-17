@@ -33,7 +33,10 @@ Phase 3.
 
 1. Run `bash shared/context.sh`. Note the stack, framework and
    `manifest_path`.
-2. Confirm the guess against [`../shared/stack-detection.md`](../shared/stack-detection.md).
+2. Confirm the guess against [`../shared/stack-detection.md`](../shared/stack-detection.md),
+   then open the matching guide in [`stacks/`](stacks/) — it carries this
+   flow's six phases instantiated for that stack, including the exact
+   catch-all fix and the failures that stack produces in the validator loop.
    Find the data model in order of reliability: migrations → generated types →
    query call sites → a sample response. **Never infer the model from the UI.**
 3. Establish four things and write them down:

@@ -12,5 +12,8 @@ spec_version 0.1
 #   spec/schemas/       spec/vocab/       spec/EXCLUSIONS.md
 #   examples/valid/     examples/invalid/
 #
+# Generated from that repository (derived, never hand-edited):
+#   spec/SPA_EXCLUSIONS.md  <- packages/validator/src/spa-exclusions.ts
+#
 # Authored in this repository, checksummed alongside them:
 #   spec/PROTOCOL_SUMMARY.md

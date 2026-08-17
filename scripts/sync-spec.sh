@@ -219,6 +219,37 @@ awk '
 [ -s "$SPEC_DIR/EXCLUSIONS.md" ] || die "Extracted EXCLUSIONS.md is empty — check the source format."
 say "  §7:       $(wc -l < "$SPEC_DIR/EXCLUSIONS.md" | tr -d ' ') lines"
 
+# --- the catch-all exclusions -------------------------------------------------
+#
+# Derived, not authored. `SPA_EXCLUSIONS` lives in the validator package
+# because three surfaces need the same words — the CLI's `init --framework`,
+# the website's quickstart, and this pack's stack guides — and the source file
+# says so itself: "a copy in each is three copies that drift, and the one that
+# drifts is the one somebody follows."
+#
+# So this is the fourth copy, and it is generated. Drift becomes a checksum
+# failure rather than a note in a maintenance list.
+#
+# Extracted by loading the TypeScript module rather than parsing it, so a
+# reformat upstream cannot silently produce a half-empty table. Skipped with a
+# warning when node is unavailable — the guides still work, they just carry the
+# copy from the last sync.
+
+EXCLUSIONS_SRC="$SRC_ROOT/packages/validator/src/spa-exclusions.ts"
+
+if [ -f "$EXCLUSIONS_SRC" ] && command -v node >/dev/null 2>&1; then
+  if node --experimental-strip-types \
+       "$REPO_ROOT/scripts/lib/extract-spa-exclusions.mjs" \
+       "$EXCLUSIONS_SRC" > "$SPEC_DIR/SPA_EXCLUSIONS.md" 2>/dev/null; then
+    say "  spa:      $(grep -c '^### ' "$SPEC_DIR/SPA_EXCLUSIONS.md") frameworks"
+  else
+    rm -f "$SPEC_DIR/SPA_EXCLUSIONS.md"
+    say "  spa:      SKIPPED — could not load $EXCLUSIONS_SRC" >&2
+  fi
+else
+  say "  spa:      SKIPPED — node or the source module is unavailable" >&2
+fi
+
 # --- provenance --------------------------------------------------------------
 
 printf '%s\n' "$VERSION" > "$SPEC_DIR/VERSION"
@@ -237,6 +268,9 @@ spec_version $VERSION
 # Vendored verbatim from the repository above:
 #   spec/schemas/       spec/vocab/       spec/EXCLUSIONS.md
 #   examples/valid/     examples/invalid/
+#
+# Generated from that repository (derived, never hand-edited):
+#   spec/SPA_EXCLUSIONS.md  <- packages/validator/src/spa-exclusions.ts
 #
 # Authored in this repository, checksummed alongside them:
 #   spec/PROTOCOL_SUMMARY.md
