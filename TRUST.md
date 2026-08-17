@@ -115,7 +115,7 @@ work around it silently**:
   so implementation and mapping work fully offline. What it cannot do offline
   is fetch a peer's feed or check a live validator, and it says which.
 - **No validator installed.** It reports that conformance is **unmeasured**,
-  not that it is fine. It offers [`setup/SKILL.md`](setup/SKILL.md).
+  not that it is fine. It offers `setup/SKILL.md` *(next release)*.
 - **A fetch failed.** It reports the failure. It does not fall back to a
   cached, remembered, or invented version of the document it could not fetch —
   the failure mode this whole pack exists to prevent is an agent inventing a

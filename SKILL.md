@@ -46,9 +46,11 @@ invent it confidently.
 2. **Run `bash shared/context.sh`.** One line of JSON: which repo this is, its
    branch, which agent is running, the detected stack, and where the manifest
    would go. Every sub-skill starts from it.
-3. **If the validator is missing, read [`setup/SKILL.md`](setup/SKILL.md).** It
-   diagnoses the toolchain and tells you what to install. It does not install
-   anything without being asked.
+3. **If the validator is missing, read `setup/SKILL.md`** — the doctor. It
+   diagnoses the toolchain and tells you what to install, and it installs
+   nothing without being asked. *(Ships in the next release. Until then the
+   two checks it would run are `node --version` and `npx cabuya-validator
+   --help`.)*
 4. **Verify what you were given.** `bash scripts/verify-integrity.sh` proves
    the vendored specification is the one upstream published. A vendored copy
    nobody verifies is a fork nobody declared.
@@ -87,10 +89,10 @@ procedure, and the procedures carry the guardrails.
 | Developer says… | Route to |
 |---|---|
 | "implement Cabuya", "publica un feed", "expose our shelters", "get us to L2" | **Implement** → [`implement/SKILL.md`](implement/SKILL.md) |
-| "consume peers", "lee los feeds de las otras apps", "show other apps' collection points" | **Consume** → [`consume/SKILL.md`](consume/SKILL.md) |
-| "validate", "valida el feed", "is my feed conforming?", "why is my badge red?" | **Validate** → [`validate/SKILL.md`](validate/SKILL.md) |
-| "publish our level", "update the manifest", "abre el PR del registro", "we're shutting down" | **Publish-status** → [`publish-status/SKILL.md`](publish-status/SKILL.md) |
-| "set up", "doctor", "no me corre el validador", "install the toolchain" | **Setup** → [`setup/SKILL.md`](setup/SKILL.md) |
+| "consume peers", "lee los feeds de las otras apps", "show other apps' collection points" | **Consume** → `consume/SKILL.md` *(next release)* |
+| "validate", "valida el feed", "is my feed conforming?", "why is my badge red?" | **Validate** → `validate/SKILL.md` *(next release)* |
+| "publish our level", "update the manifest", "abre el PR del registro", "we're shutting down" | **Publish-status** → `publish-status/SKILL.md` *(next release)* |
+| "set up", "doctor", "no me corre el validador", "install the toolchain" | **Setup** → `setup/SKILL.md` *(next release)* |
 | "what is Cabuya?", "explain the ladder", "what does L3 require?" | Answer from [`spec/PROTOCOL_SUMMARY.md`](spec/PROTOCOL_SUMMARY.md) — **do not route**; this is the one case the router answers directly, because it is the whole point |
 
 Both languages are first-class triggers. Colombian Spanish is the working

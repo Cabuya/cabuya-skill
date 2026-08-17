@@ -1,0 +1,27 @@
+{
+  "protocol": {
+    "name": "cabuya",
+    "spec_version": "0.1.0"
+  },
+  "publisher": {
+    "publisher_id": "example-app",
+    "canonical_url": "https://example.org",
+    "aliases": ["https://www.example.org"],
+    "name": "Example Aid App",
+    "contact": "datos@example.org"
+  },
+  "conformance_target": "L2",
+  "feeds": [
+    {
+      "name": "places",
+      "url": "https://example.org/cabuya/places.json",
+      "entity": "place",
+      "profile": "core",
+      "municipality_code": "66001"
+    }
+  ],
+  "license": "CC-BY-4.0",
+  "permitted_use": ["display", "aggregate", "ai_answer"],
+  "crawl_policy_url": "https://example.org/uso-de-datos",
+  "languages": ["es", "en"]
+}
