@@ -5,6 +5,7 @@
 # implementation, so these pin the sentences whose removal changes behaviour.
 
 setup() {
+  load helpers
   REPO="$(cd "$BATS_TEST_DIRNAME/.." && pwd)"
   RULES="$REPO/consume/rules.md"
   CONSUME="$REPO/consume/SKILL.md"
@@ -12,16 +13,6 @@ setup() {
   POLICY="$REPO/shared/crawl-policy.md"
 }
 
-# Search the prose as a reader sees it: line wraps collapsed, blockquote
-# markers and inline emphasis stripped. A sentence does not stop meaning what
-# it means because one word inside it is bold — and a test that thought
-# otherwise would push the author to remove the emphasis.
-says() {
-  tr '\n' ' ' < "$1" \
-    | tr -s ' \t' ' ' \
-    | sed -e 's/> //g' -e 's/\*\*//g' -e 's/\*//g' -e 's/`//g' \
-    | grep -qi -- "$2"
-}
 
 # --- the six rules ------------------------------------------------------------
 

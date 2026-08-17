@@ -12,22 +12,12 @@
 # fails loudly when `cedula` disappears from the deny-list.
 
 setup() {
+  load helpers
   REPO="$(cd "$BATS_TEST_DIRNAME/.." && pwd)"
   DENY="$REPO/shared/pii-deny-list.md"
   IMPL="$REPO/implement/SKILL.md"
 }
 
-# Prose wraps. A sentence that matters can straddle two lines, and a
-# line-based grep would then report it missing — which would push the author
-# to reflow the paragraph to satisfy the test, exactly backwards. Collapse
-# whitespace first and search the flowed text.
-flowed() {
-  tr '\n' ' ' < "$1" | tr -s ' \t' ' ' | sed 's/> //g'
-}
-
-says() {
-  flowed "$1" | grep -qi -- "$2"
-}
 
 # --- the deny-list ------------------------------------------------------------
 
@@ -76,7 +66,7 @@ says() {
   says "$IMPL" 'do not proceed without an explicit human yes'
   says "$IMPL" 'silence is not consent'
   # And there is explicitly no escape hatch.
-  says "$IMPL" 'there is no `--yes`'
+  says "$IMPL" 'there is no --yes'
 }
 
 @test "all six phases are present, in order" {
@@ -92,7 +82,7 @@ says() {
 @test "CR-1 is stated where the mapping happens" {
   says "$IMPL" 'CR-1'
   says "$IMPL" 'an edit is not a confirmation'
-  says "$IMPL" 'never to `updated_at`'
+  says "$IMPL" 'never to updated_at'
 }
 
 @test "the always-now anti-pattern is named in the serialize phase" {

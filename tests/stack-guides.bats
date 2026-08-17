@@ -9,6 +9,7 @@
 # without judgement, so a contributor finds out before a human does.
 
 setup() {
+  load helpers
   REPO="$(cd "$BATS_TEST_DIRNAME/.." && pwd)"
   STACKS="$REPO/implement/stacks"
 }
@@ -17,20 +18,7 @@ guides() {
   find "$STACKS" -name '*.md' ! -name 'README.md' | sort
 }
 
-flowed() {
-  tr '\n' ' ' < "$1" | tr -s ' \t' ' '
-}
 
-# Only what is inside fenced code blocks.
-#
-# These guides *describe* the anti-patterns as well as avoiding them — the
-# validator-loop table says "`new Date()` is in the handler" as a diagnosis,
-# and the PII section warns about `select('*')` by name. A check that scanned
-# the whole file would flag the warning and push the author to delete it,
-# which is the opposite of what the test is for.
-code_only() {
-  awk '/^```/ { fenced = !fenced; next } fenced { print }' "$1"
-}
 
 @test "the four v0.1 guides exist" {
   for guide in nextjs-supabase vite-spa-supabase php-ssr static-sheet; do
@@ -146,11 +134,11 @@ code_only() {
   # Prisma and Eloquent select everything by omission, not by a `*`. There is
   # nothing for the check above to match, so the guides must say it in words
   # and those words are what is pinned here.
-  flowed "$STACKS/nextjs-supabase.md" | grep -qi 'no `include`' || {
+  flowed "$STACKS/nextjs-supabase.md" | grep -qi 'no include' || {
     echo "the Next.js guide does not warn about include"
     return 1
   }
-  flowed "$STACKS/php-ssr.md" | grep -qi "toArray()" || {
+  flowed "$STACKS/php-ssr.md" | grep -qi 'toArray()' || {
     echo "the PHP guide does not warn about Eloquent's default serialization"
     return 1
   }

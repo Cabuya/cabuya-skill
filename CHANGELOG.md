@@ -28,6 +28,10 @@ knows whether the pack applies to them.
   payload that makes the pack useful with no network.
 - `examples/` — the five teaching examples, vendored and checksummed with
   everything else.
+- `tests/acceptance/` — the test that can fail the pack's central claim: a
+  fixed prompt, an answer key, a grader, a sandbox preparer, and six committed
+  transcripts (one that must pass, five that must fail).
+- `docs/ACCEPTANCE_TEST.md`, `docs/COMPATIBILITY.md`.
 - `consume/SKILL.md` + `consume/rules.md` — reading the network without
   breaking its rules. The six MUSTs, each with the self-test that keeps it
   true after the next refactor.
@@ -71,6 +75,11 @@ knows whether the pack applies to them.
 
 **All five sub-skills are in.** An agent can take an app from a database to a
 measured feed, read its peers' feeds under the six consumption rules, publish
-a level it has actually earned, and wind down without stranding anybody. What
-remains before a release is the acceptance test — the procedure that decides
-whether an installed pack really does teach an offline agent the protocol.
+a level it has actually earned, and wind down without stranding anybody. The
+acceptance test exists and its kit is verified in CI.
+
+**Before 0.1.0 ships:** a second acceptance run, on a different harness, by
+somebody who did not write the pack. The one recorded run scores 10/10 + 3/3
+and was performed by the authoring session — which checks that the answers are
+present and citable, not that a fresh agent finds them. That gap is recorded
+in `docs/ACCEPTANCE_TEST.md` rather than counted as a pass.

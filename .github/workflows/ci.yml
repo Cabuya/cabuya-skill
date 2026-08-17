@@ -49,7 +49,7 @@ jobs:
           # and a hard-coded path to a file that does not exist yet is a red
           # build that says nothing about the code.
           files=""
-          for candidate in setup.sh scripts/*.sh shared/*.sh bin/*.sh; do
+          for candidate in setup.sh scripts/*.sh shared/*.sh bin/*.sh tests/acceptance/*.sh; do
             [ -f "$candidate" ] && files="$files $candidate"
           done
           if [ -z "$files" ]; then
@@ -90,13 +90,54 @@ jobs:
         run: /bin/bash --version
       - name: Every script parses under bash 3.2
         run: |
-          for candidate in setup.sh scripts/*.sh shared/*.sh bin/*.sh; do
+          for candidate in setup.sh scripts/*.sh shared/*.sh bin/*.sh tests/acceptance/*.sh; do
             [ -f "$candidate" ] || continue
             /bin/bash -n "$candidate" || exit 1
             echo "ok: $candidate"
           done
       - name: The integrity check runs under bash 3.2
         run: /bin/bash scripts/verify-integrity.sh
+
+  acceptance:
+    name: Acceptance test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # What CI can check without an agent: that the grader still works, and
+      # that a passing run is on record for the version being built.
+      #
+      # What it cannot: drive a real agent. That needs a harness and an API
+      # key, which a fork does not have — so this job never reports the test
+      # green when it did not run. The scoring is verified here; the running
+      # is a human gate, documented in docs/ACCEPTANCE_TEST.md.
+      - name: The grader can still fail
+        run: |
+          # Five committed transcripts that MUST fail. A grader that cannot
+          # fail would pass every release, which is worse than having none.
+          failed=0
+          for fixture in tests/acceptance/fixtures/flawed-*.md; do
+            if python3 tests/acceptance/grade.py "$fixture" >/dev/null 2>&1; then
+              echo "✗ $(basename "$fixture") scored a PASS and must not"
+              failed=$((failed + 1))
+            else
+              echo "✓ $(basename "$fixture") correctly fails"
+            fi
+          done
+          [ "$failed" -eq 0 ] || exit 1
+
+      - name: The grader still passes a good transcript
+        run: python3 tests/acceptance/grade.py tests/acceptance/fixtures/perfect-transcript.md
+
+      - name: A passing run is recorded for this version
+        run: bash tests/acceptance/run-acceptance.sh --check
+
+      - name: State plainly that no agent ran here
+        run: |
+          echo "::notice title=Acceptance test::Grader verified and a recorded run checked. No agent was driven in this job; see docs/ACCEPTANCE_TEST.md. A release needs two recorded runs on two different harnesses."
 
   markdown-links:
     name: Markdown links
