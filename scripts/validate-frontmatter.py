@@ -85,8 +85,10 @@ def parse_minimal_yaml(text: str) -> dict:
     Python packaging set up — which is most contributors' first five minutes.
 
     It understands exactly what the frontmatter contains: top-level scalars,
-    two levels of nested mapping (`metadata.protocol.*`), and inline or block
-    lists of strings. Anything else raises, because a reader that guesses at a
+    two levels of nested mapping (`metadata.protocol.*`), inline or block lists
+    of strings, and block scalars (`>`, `|`, and their `-`/`+` chomping forms)
+    because every skill in every reference pack writes its description as a
+    folded scalar. Anything else raises, because a reader that guesses at a
     construct it does not know would accept frontmatter CI would then reject —
     the one outcome worse than requiring the dependency.
     """
@@ -108,12 +110,45 @@ def parse_minimal_yaml(text: str) -> dict:
             return float(value)
         return value
 
+    def read_block_scalar(
+        lines: list[str], start: int, parent_indent: int
+    ) -> tuple[list[str], int]:
+        """Consume the indented body of a `>` or `|` scalar.
+
+        Returns the body lines and the index of the first line that is not part
+        of it. Folded (`>`) joins on spaces, literal (`|`) on newlines. The
+        chomping indicator is honoured exactly — clip (bare) keeps one trailing
+        newline, strip (`-`) keeps none, keep (`+`) keeps them all — because
+        this reader's whole justification is that it never disagrees with
+        PyYAML about a file that parses, and a trailing newline is a
+        disagreement.
+        """
+        body: list[str] = []
+        index = start
+        while index < len(lines):
+            candidate = lines[index]
+            if not candidate.strip():
+                body.append("")
+                index += 1
+                continue
+            if len(candidate) - len(candidate.lstrip()) <= parent_indent:
+                break
+            body.append(candidate.strip())
+            index += 1
+        return body, index
+
     root: dict = {}
     # (indent, container) — the mapping each indentation level writes into.
     stack: list[tuple[int, dict]] = [(-1, root)]
     pending_list: list | None = None
 
-    for number, line in enumerate(text.splitlines(), start=1):
+    lines = text.splitlines()
+    cursor = 0
+    while cursor < len(lines):
+        line = lines[cursor]
+        number = cursor + 1
+        cursor += 1
+
         if not line.strip() or line.lstrip().startswith("#"):
             continue
 
@@ -138,6 +173,24 @@ def parse_minimal_yaml(text: str) -> dict:
         if not stack:
             raise ValueError(f"line {number}: indentation does not nest")
         container = stack[-1][1]
+
+        marker = raw.strip()
+        if marker and marker[0] in "|>" and set(marker[1:]) <= {"-", "+"}:
+            body, cursor = read_block_scalar(lines, cursor, indent)
+            joiner = "\n" if marker[0] == "|" else " "
+            while body and not body[-1]:
+                body.pop()
+            value = joiner.join(body)
+            if "+" in marker:
+                # keep: every trailing blank line survives. Reconstructing the
+                # exact count is out of scope for a fallback, and the pack's
+                # frontmatter does not use it — so say so rather than be wrong.
+                raise ValueError(
+                    f"line {number}: `{marker}` (keep chomping) is not "
+                    "supported by the fallback reader — install pyyaml"
+                )
+            container[key] = value if "-" in marker else value + "\n"
+            continue
 
         if raw.strip() == "":
             # Either a nested mapping or a block list; the next line decides.
@@ -187,6 +240,30 @@ def parse_frontmatter(path: Path) -> tuple[dict | None, str | None]:
 
     if not isinstance(data, dict):
         return None, "frontmatter is not a mapping"
+
+    # Two readers, one answer — checked, not asserted.
+    #
+    # The fallback exists so this validator runs before a contributor has pip
+    # working. That is only worth anything if it agrees with PyYAML, and the
+    # way to know it agrees is to run both wherever both exist. CI installs
+    # PyYAML, so this comparison runs on every push: a frontmatter construct
+    # the fallback reads differently fails here rather than on somebody's
+    # laptop, months later, as a mystery.
+    if yaml is not None:
+        try:
+            shadow = parse_minimal_yaml(block)
+        except Exception as error:  # noqa: BLE001
+            return None, (
+                f"frontmatter parses under PyYAML but not under the fallback "
+                f"reader ({error}) — contributors without pyyaml cannot run "
+                "this check. Simplify the frontmatter, or teach the fallback."
+            )
+        if shadow != data:
+            return None, (
+                "the two frontmatter readers disagree about this file. "
+                f"PyYAML: {data!r}. Fallback: {shadow!r}."
+            )
+
     return data, None
 
 

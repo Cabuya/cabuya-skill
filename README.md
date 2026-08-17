@@ -77,6 +77,12 @@ git clone --depth 1 https://github.com/Cabuya/cabuya-skill \
 Vendored into your own repository is the recommended path: reviewable in a pull
 request, pinned to a commit, and offline.
 
+Cloned somewhere else? `bash setup.sh` links the pack and each sub-skill into
+every agent it finds on the machine — `--host claude` to pick one, `--dry-run`
+to see what it would do first. It links rather than copies, so `git pull`
+updates every agent at once, and it will not replace a real file that is
+already sitting where a symlink would go.
+
 **There is no `curl … | bash` one-liner here, and there will not be.** A pipe
 streams, so a truncated download executes a partial script — and in a shell
 without `pipefail` a failed download exits `0`, reporting success while
