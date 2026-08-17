@@ -1,0 +1,20 @@
+# Editors and operating systems
+.DS_Store
+*.swp
+.idea/
+.vscode/
+
+# Agent host symlinks created by setup.sh — never committed. The canonical
+# directory is `.agents/`; these are per-host aliases pointing at it, and a
+# committed symlink would break on every machine but the one that made it.
+.claude
+.cursor
+
+# Local scratch
+tmp/
+*.log
+
+# Python, for the validation script
+__pycache__/
+*.pyc
+.venv/

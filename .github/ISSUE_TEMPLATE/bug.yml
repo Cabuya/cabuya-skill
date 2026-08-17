@@ -1,0 +1,74 @@
+name: Bug report
+description: The pack did something wrong, or refused to do something right.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Two things worth knowing before you fill this in.
+
+        **If the pack wrote person-level data into a feed, or claimed a
+        conformance level nothing measured, stop and file a
+        [private security advisory](https://github.com/Cabuya/cabuya-skill/security/advisories/new)
+        instead.** Those are the failures this project treats as security
+        issues, and a public issue publishes the problem before there is a fix.
+
+        **Please do not paste real feed data.** Reduce it to the smallest
+        example that still fails — which is also the version somebody can act
+        on.
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What the agent did, and what you expected instead.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: How to reproduce it
+      description: |
+        What you asked the agent, in your own words, and what it did with that.
+        A transcript is more useful than a summary.
+      placeholder: |
+        1. Asked: "publica un feed desde nuestra base de datos"
+        2. The agent read the schema and produced …
+        3. Expected … , got …
+    validations:
+      required: true
+
+  - type: input
+    id: agent
+    attributes:
+      label: Which agent
+      placeholder: Claude Code / Cursor / Codex / Gemini CLI / Copilot / other
+    validations:
+      required: true
+
+  - type: input
+    id: install
+    attributes:
+      label: How the pack is installed
+      placeholder: vendored in the repo / installer script / skills CLI / HTTP only
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Pack version, or the commit
+      description: The `version` in `SKILL.md`, or the commit you vendored.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: hygiene
+    attributes:
+      label: Before submitting
+      options:
+        - label: This contains no person-level data — no names, phone numbers, emails or personal media, mine or anybody else's
+          required: true
+        - label: This is not a security issue (see the note above)
+          required: true

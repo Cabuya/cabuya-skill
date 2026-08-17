@@ -1,0 +1,18 @@
+{
+  "//": "Repo-internal links are checked strictly; external ones are checked but tolerated when a host is temporarily unreachable. A CI failure caused by somebody else's outage teaches contributors to ignore CI.",
+  "ignorePatterns": [
+    { "pattern": "^https://github.com/Cabuya/cabuya-skill/security/advisories/new" }
+  ],
+  "replacementPatterns": [],
+  "httpHeaders": [
+    {
+      "urls": ["https://github.com", "https://cabuya.org"],
+      "headers": { "Accept": "text/html" }
+    }
+  ],
+  "timeout": "20s",
+  "retryOn429": true,
+  "retryCount": 3,
+  "fallbackRetryDelay": "30s",
+  "aliveStatusCodes": [200, 206, 429]
+}

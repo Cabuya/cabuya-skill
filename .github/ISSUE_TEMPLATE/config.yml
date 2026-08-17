@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/Cabuya/cabuya-skill/security/advisories/new
+    about: Report privately. Never in a public issue — that publishes the problem before there is a fix.
+  - name: A change to the protocol itself
+    url: https://cabuya.org/rfcs
+    about: The specification changes through an RFC, not through this pack.
+  - name: How to use the skill
+    url: https://cabuya.org/developers/skill
+    about: Installing it, invoking it, and what it will not do.

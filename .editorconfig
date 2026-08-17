@@ -1,0 +1,26 @@
+# Consistent whitespace across editors. Kept minimal on purpose: a config that
+# fights a contributor's setup is a config they disable.
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 2
+
+[*.md]
+# Two trailing spaces are a hard line break in Markdown; trimming them silently
+# reflows somebody's paragraph.
+trim_trailing_whitespace = false
+
+[*.sh]
+# Bash 3.2 compatible, and readable at 80 columns in a terminal.
+indent_size = 2
+
+[*.py]
+indent_size = 4
+
+[Makefile]
+indent_style = tab

@@ -1,0 +1,18 @@
+# Actions only.
+#
+# This pack has no runtime dependencies by design — it is Markdown, shell and
+# one Python script — so there is no npm or pip ecosystem to watch. What it does
+# depend on is the CI actions, and a pinned action with a known vulnerability is
+# a supply-chain problem in a repository whose whole argument is that vendored
+# things must be verifiable.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: 'ci'
+      include: scope
+    labels:
+      - dependencies

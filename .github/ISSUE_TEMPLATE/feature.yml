@@ -1,0 +1,59 @@
+name: Feature request
+description: Something the pack should do, or should do differently.
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **A change to the protocol itself goes through an
+        [RFC](https://cabuya.org/rfcs), not through this pack.** If what you
+        want is a new field, a different conformance rule or a change to what a
+        record means, that is the specification's process. This form is for the
+        pack: what it generates, how it asks, which stacks it knows.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What is hard right now
+      description: |
+        The situation, not the solution. A described problem gets better
+        answers than a described feature — often ones the requester had not
+        considered.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What you think would help
+      description: Optional. A sketch is fine.
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Which part
+      options:
+        - implement — data model to a conforming feed
+        - consume — reading other publishers' feeds
+        - validate — running the validator and reading the report
+        - publish-status — manifest, wind-down, the registry PR
+        - setup — the toolchain doctor
+        - a stack guide
+        - the router or the pack's structure
+        - something else
+    validations:
+      required: true
+
+  - type: input
+    id: stack
+    attributes:
+      label: If it is stack-specific, which stack
+      placeholder: Next.js / Vite+React / Laravel / Django / Supabase / static / other
+
+  - type: checkboxes
+    id: rules
+    attributes:
+      label: Compatibility with the rules that do not bend
+      options:
+        - label: This does not require the pack to handle person-level data, put contact values in a feed, scrape, ignore a crawl policy, or claim unmeasured conformance
+          required: true
