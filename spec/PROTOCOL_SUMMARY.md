@@ -8,7 +8,7 @@ paraphrased here at all but reproduced verbatim in
 [`EXCLUSIONS.md`](EXCLUSIONS.md).
 
 Full text: <https://cabuya.org/developers/spec/0.1>. Provenance of this copy:
-[`SOURCE`](SOURCE). Status: **0.1 draft**.
+[`SOURCE`](SOURCE). Status: **0.1 normative**.
 
 ---
 

@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://cabuya.org/schemas/0.1/place-feed.schema.json",
-  "title": "Cabuya place feed (v0.1 DRAFT — working-group proposal)",
+  "title": "Cabuya place feed (v0.1)",
   "type": "object",
   "required": ["last_updated", "ttl", "version", "publisher_id", "license", "data"],
   "properties": {

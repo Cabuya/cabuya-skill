@@ -4,8 +4,8 @@
 # what makes the copy traceable rather than merely present.
 
 repo        git@github.com:Cabuya/cabuya.org.git
-ref         b008d09
-commit      b008d090488708731807d9b4f1bb6b2aa4363397
+ref         4965719
+commit      4965719425ad65f0de0ab8ddc72ef964062f9cd1
 spec_version 0.1
 
 # Vendored verbatim from the repository above:

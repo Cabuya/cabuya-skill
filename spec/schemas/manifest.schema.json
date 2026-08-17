@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://cabuya.org/schemas/0.1/manifest.schema.json",
-  "title": "Cabuya publisher manifest (v0.1 DRAFT — working-group proposal)",
+  "title": "Cabuya publisher manifest (v0.1)",
   "type": "object",
   "required": ["protocol", "publisher", "conformance_target", "license"],
   "properties": {
