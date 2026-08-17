@@ -1,0 +1,27 @@
+{
+  "$comment": "INVALID — WHY (three violations of §7): (1) a phone number travels in the feed ('x_example_phone' — namespaced extensions do NOT exempt contact data; contact is public_url + link-out, fetch-on-demand from origin); (2) confirmed_by carries a person's NAME instead of a role token; (3) description embeds a personal name and phone (free text is the third leak channel — publishers MUST strip before publishing). Schema alone passes some of these; the validator's deny-pattern pass catches them all. VALIDATOR ERRORS: data.places[0].x_example_phone: contact values MUST NOT travel in feeds (use contact_available + public_url) · data.places[0].confirmed_by: must be a role token (team|volunteer|official_source|partner:{id}), never a personal name · data.places[0].description: possible personal data detected (name+phone pattern) — strip before publishing.",
+  "last_updated": "2026-08-16T04:00:00Z",
+  "ttl": 300,
+  "version": "0.1.0",
+  "publisher_id": "example-app",
+  "license": "CC-BY-4.0",
+  "data": {
+    "places": [
+      {
+        "id": "77",
+        "publisher_id": "example-app",
+        "name": "Acopio Consota",
+        "place_kind": "collection_center",
+        "municipality_code": "66001",
+        "address_text": "Mz 7 y 8, Villa Consota, Cuba",
+        "lifecycle_status": "active",
+        "last_confirmed_at": "2026-08-15T10:00:00Z",
+        "confirmed_by": "María Ejemplo Pérez",
+        "description": "Recibe alimentos. Preguntar por María Ejemplo Pérez, cel 3000000000.",
+        "x_example_phone": "+57 300 000 0000",
+        "source": { "source_id": "example-app" },
+        "public_url": "https://example-app.invalid/lugares/77"
+      }
+    ]
+  }
+}

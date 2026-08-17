@@ -1,0 +1,153 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cabuya.org/schemas/0.1/place-feed.schema.json",
+  "title": "Cabuya place feed (v0.1 DRAFT — working-group proposal)",
+  "type": "object",
+  "required": ["last_updated", "ttl", "version", "publisher_id", "license", "data"],
+  "properties": {
+    "last_updated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Mandatory feed-level generation timestamp (RFC 3339 UTC). MUST NOT be computed per-request (always-now anti-pattern)."
+    },
+    "ttl": { "type": "integer", "minimum": 0, "description": "Seconds a consumer may cache before re-polling. The caching contract." },
+    "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "publisher_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,62}[a-z0-9]$" },
+    "license": { "type": "string" },
+    "permitted_use": {
+      "type": "array",
+      "items": { "type": "string", "enum": ["display", "aggregate", "redistribute", "ai_answer", "ai_train"] }
+    },
+    "data": {
+      "type": "object",
+      "required": ["places"],
+      "properties": {
+        "places": { "type": "array", "items": { "$ref": "#/$defs/place" } }
+      }
+    },
+    "next_cursor": { "type": ["string", "null"], "description": "Read-API responses only. Opaque server-side sequence cursor — never a record timestamp." }
+  },
+  "$defs": {
+    "localizable": {
+      "oneOf": [
+        { "type": "string", "$comment": "Plain string is interpreted as language es." },
+        {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["text", "language"],
+            "properties": {
+              "text": { "type": "string" },
+              "language": { "type": "string" }
+            }
+          }
+        }
+      ]
+    },
+    "place": {
+      "type": "object",
+      "required": [
+        "id", "publisher_id", "name", "place_kind",
+        "municipality_code", "lifecycle_status",
+        "last_confirmed_at", "source", "public_url"
+      ],
+      "$comment": "Locator rule enforced via allOf below: address_text OR (lat AND lon). last_confirmed_at key REQUIRED, null legal ('never confirmed' is honest data).",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Publisher's stable local id (int/uuid/hex all acceptable, R3). Opaque; MUST NOT embed personal data (R6)."
+        },
+        "publisher_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,62}[a-z0-9]$" },
+        "name": {
+          "$ref": "#/$defs/localizable",
+          "description": "CR-2: MUST NOT encode operational state ('(cerrado ahora)' belongs in service_status, not the name)."
+        },
+        "place_kind": {
+          "type": "string",
+          "enum": ["collection_center", "shelter", "hospital", "health_post", "water_point", "food_point", "distribution_point", "warehouse", "info_point", "command_post", "other"]
+        },
+        "place_kind_secondary": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/place/properties/place_kind" }
+        },
+        "place_kind_ext": { "type": "string", "pattern": "^x_[a-z0-9-]+_[a-z0-9_]+$" },
+        "origin_category": { "type": "string", "description": "Publisher's own category value, verbatim, untranslated. Keeps every crosswalk auditable." },
+        "description": { "$ref": "#/$defs/localizable", "description": "Publishers MUST strip personal data before publishing (free text is the third leak channel)." },
+
+        "municipality_code": {
+          "type": ["string", "null"],
+          "pattern": "^\\d{5}$",
+          "description": "DIVIPOLA. null permitted ONLY with municipality_text present (validator warning, not error — Q3)."
+        },
+        "municipality_text": { "type": "string" },
+        "address_text": { "type": "string" },
+        "neighborhood_text": { "type": "string" },
+        "lat": { "type": "number", "minimum": -90, "maximum": 90 },
+        "lon": { "type": "number", "minimum": -180, "maximum": 180 },
+        "geo_precision": { "type": "string", "enum": ["exact", "approximate", "centroid", "unknown"] },
+
+        "lifecycle_status": { "type": "string", "enum": ["active", "closed", "planned", "unknown"] },
+        "service_status": { "type": "string", "enum": ["open", "full", "paused", "unknown"] },
+        "closed_at": { "type": "string", "format": "date-time" },
+        "expires_at": { "type": "string", "format": "date-time" },
+
+        "last_confirmed_at": {
+          "type": ["string", "null"],
+          "format": "date-time",
+          "description": "Key MUST be present. null = never confirmed (honest). Omission = non-conforming."
+        },
+        "confirmed_by": {
+          "type": "string",
+          "description": "Publisher-scoped ROLE/actor token (team, volunteer, official_source, partner:{publisher_id}). MUST NOT be a person's name."
+        },
+        "confirmation_method": { "type": "string", "enum": ["in_person", "phone", "official_source", "partner_report", "user_report", "unverified"] },
+        "confirmations_24h": { "type": "integer", "minimum": 0 },
+        "contradictions_active": { "type": "integer", "minimum": 0, "description": "Negative confirmation is a first-class signal." },
+        "last_reported_absent_at": { "type": "string", "format": "date-time" },
+        "updated_at": { "type": "string", "format": "date-time", "description": "CR-1: never a substitute for last_confirmed_at — an edit is not a confirmation." },
+        "published_at": { "type": "string", "format": "date-time" },
+
+        "source": {
+          "type": "object",
+          "required": ["source_id"],
+          "properties": {
+            "source_id": { "type": "string" },
+            "source_url": { "type": "string", "format": "uri" },
+            "retrieved_at": { "type": "string", "format": "date-time" },
+            "source_kind": { "type": "string", "enum": ["first_party", "partner_feed", "official_source", "press", "user_report"] }
+          },
+          "description": "Structured provenance, never prose (free-text 'fuente' observed leaking personal names). Aggregators MUST preserve the original chain."
+        },
+        "source_authority": { "type": "string", "enum": ["government", "ngo", "community", "volunteer", "commercial"] },
+        "attribution_required": { "type": "boolean" },
+
+        "public_url": { "type": "string", "format": "uri", "description": "REQUIRED. Link-out is how contact/media/detail reach users WITHOUT travelling in the feed." },
+        "contact_available": { "type": "boolean", "description": "Carries the fact, never the value." },
+
+        "same_as": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,62}[a-z0-9]:.+$" },
+          "description": "Fully-qualified {publisher_id}:{id} claims. One-hop, non-transitive, never authority (Q5)."
+        },
+        "merged_into": { "type": "string", "description": "Same-publisher supersession pointer (precedent: alluda ciudades.fusionada_en)." }
+      },
+      "allOf": [
+        {
+          "anyOf": [
+            { "required": ["address_text"] },
+            { "required": ["lat", "lon"] }
+          ],
+          "$comment": "Locator rule: at least address_text OR both lat+lon. 64% of the reference dataset has no coordinates."
+        },
+        {
+          "if": { "required": ["municipality_code"], "properties": { "municipality_code": { "type": "null" } } },
+          "then": { "required": ["municipality_text"] }
+        }
+      ],
+      "additionalProperties": true,
+      "$comment": "Foreign members preserved (verdict H). NEVER valid in any member, known or unknown: personal names, personal phone numbers, person-level records (§7.1 join prohibition) — enforced by the validator's deny-pattern pass, which schema alone cannot express."
+    }
+  }
+}

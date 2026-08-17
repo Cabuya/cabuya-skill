@@ -1,0 +1,160 @@
+{
+  "$comment": "Machine-readable place-kind crosswalk. Canonical targets are the place-feed.schema.json enum ONLY. 'ext' targets mean: place_kind='other' + place_kind_ext as given. Lossy or ambiguous joins carry 'flag'. Evidence: docs/context/ENTITY_MODEL.md §4.2 (probed 2026-08-16).",
+  "canonical": [
+    "collection_center",
+    "shelter",
+    "hospital",
+    "health_post",
+    "water_point",
+    "food_point",
+    "distribution_point",
+    "warehouse",
+    "info_point",
+    "command_post",
+    "other"
+  ],
+  "crosswalks": {
+    "pereiraayuda": {
+      "acopio": "collection_center",
+      "albergue": "shelter",
+      "hospital": "hospital",
+      "mascota": {
+        "target": "other",
+        "ext": "x_pereiraayuda_pet_point"
+      },
+      "psicologica": "health_post",
+      "donacion": "distribution_point",
+      "vivienda": {
+        "target": null,
+        "flag": "v0.2 rental_notice"
+      },
+      "colapso": {
+        "target": null,
+        "flag": "v0.2 damage_report"
+      },
+      "necesita_ayuda": {
+        "target": null,
+        "flag": "v0.2 need"
+      },
+      "maquinaria": {
+        "target": "other",
+        "ext": "x_pereiraayuda_maquinaria"
+      }
+    },
+    "unidosporpereira": {
+      "albergues": "shelter",
+      "acopio": "collection_center",
+      "salud": "hospital",
+      "locales": {
+        "target": "other",
+        "ext": "x_unidosporpereira_open_business"
+      },
+      "riesgos": {
+        "target": null,
+        "flag": "v0.2 hazard_notice (CAP)"
+      }
+    },
+    "alluda": {
+      "centros": {
+        "target": "collection_center",
+        "flag": "some rows are shelters by name — review per row"
+      }
+    },
+    "ayudared": {
+      "Acopio": "collection_center",
+      "Albergue": "shelter"
+    },
+    "pereiraresponde": {
+      "support/collection": "collection_center",
+      "support/shelter": "shelter",
+      "support/hospital": "hospital",
+      "support/pharmacy": "health_post",
+      "support/veterinary": {
+        "target": "other",
+        "ext": "x_pereiraresponde_pet_point"
+      },
+      "support/store": {
+        "target": "other",
+        "ext": "x_pereiraresponde_open_business"
+      },
+      "support/supplies": "distribution_point"
+    },
+    "corag": {
+      "acopio": "collection_center",
+      "refugio": "shelter",
+      "agua": "water_point",
+      "alimentos": "food_point",
+      "salud": "health_post",
+      "medicamentos": "health_post",
+      "mascotas": {
+        "target": "other",
+        "ext": "x_corag_pet_point"
+      },
+      "$flag": "corag's enum is a need vocabulary reused for places; map from the real place object"
+    },
+    "gogo": {
+      "cocina": "food_point",
+      "punto_comida": "food_point",
+      "hidratacion_provee": "water_point",
+      "hidratacion_necesita": {
+        "target": "water_point",
+        "flag": "polarity — preserve as origin_category"
+      },
+      "medicina_humana_provee": "health_post",
+      "negocios": {
+        "target": "other",
+        "ext": "x_gogo_open_business"
+      }
+    },
+    "terremotocolombia": {
+      "Acopio": "collection_center",
+      "Starlink": {
+        "target": "other",
+        "ext": "x_terremotocolombia_starlink"
+      },
+      "Necesidades": {
+        "target": null,
+        "flag": "v0.2 need"
+      },
+      "Tengo": {
+        "target": null,
+        "flag": "v0.2 offer"
+      },
+      "Edificios": {
+        "target": null,
+        "flag": "v0.2 damage_report"
+      },
+      "Buscan": {
+        "target": null,
+        "flag": "EXCLUDED — person-level (§7.1)"
+      }
+    },
+    "reporteco": {
+      "shelter": "shelter",
+      "water": "water_point",
+      "damage": {
+        "target": null,
+        "flag": "v0.2 damage_report"
+      },
+      "missing": {
+        "target": null,
+        "flag": "EXCLUDED — person-level (§7.1)"
+      }
+    },
+    "gravitas": {
+      "Centro de acopio": {
+        "target": "collection_center",
+        "flag": "three kinds in one value (incl. shelter, command post) — unresolvable without the publisher; use place_kind_secondary"
+      }
+    },
+    "mapadelterremoto": {
+      "/albergues": "shelter",
+      "/hospitales": "hospital",
+      "/colegios": {
+        "target": null,
+        "flag": "ambiguous: shelter or damage record — ask, do not guess"
+      },
+      "/servicios": "other"
+    }
+  }
+}

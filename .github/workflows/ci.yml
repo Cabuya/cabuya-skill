@@ -57,8 +57,11 @@ jobs:
             exit 0
           fi
           echo "Linting:$files"
-          # shellcheck disable=SC2086 — word splitting is the point here.
-          shellcheck $files
+          # -f gcc because shellcheck's default output cannot encode an em dash
+          # on a runner whose stdout is not UTF-8, and failing on a locale
+          # difference teaches people that the lint is noise.
+          # shellcheck disable=SC2086
+          shellcheck -f gcc $files
 
   bats:
     name: bats

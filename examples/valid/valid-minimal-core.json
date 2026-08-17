@@ -1,0 +1,39 @@
+{
+  "$comment": "VALID — minimal Core feed. The L2 floor: what an afternoon of work produces. Note last_confirmed_at: null on the second record — 'never confirmed' stated honestly (the silence test: a publisher with zero freshness data can still conform).",
+  "last_updated": "2026-08-16T04:00:00Z",
+  "ttl": 300,
+  "version": "0.1.0",
+  "publisher_id": "example-app",
+  "license": "CC-BY-4.0",
+  "permitted_use": ["display", "aggregate", "ai_answer"],
+  "data": {
+    "places": [
+      {
+        "id": "184",
+        "publisher_id": "example-app",
+        "name": "Coliseo Mayor",
+        "place_kind": "shelter",
+        "municipality_code": "66001",
+        "address_text": "Av. Las Américas con Calle 37, Villa Olímpica",
+        "lifecycle_status": "active",
+        "service_status": "full",
+        "last_confirmed_at": "2026-08-15T21:00:00Z",
+        "confirmation_method": "in_person",
+        "source": { "source_id": "example-app", "source_kind": "first_party" },
+        "public_url": "https://example-app.invalid/lugares/184"
+      },
+      {
+        "id": "b3f2c9e1-7a44-4a1c-9d02-1f6e8a5c0d11",
+        "publisher_id": "example-app",
+        "name": "Punto de acopio Kennedy",
+        "place_kind": "collection_center",
+        "municipality_code": "66001",
+        "address_text": "Parque principal de Kennedy",
+        "lifecycle_status": "active",
+        "last_confirmed_at": null,
+        "source": { "source_id": "example-app", "source_kind": "user_report" },
+        "public_url": "https://example-app.invalid/lugares/b3f2c9e1-7a44-4a1c-9d02-1f6e8a5c0d11"
+      }
+    ]
+  }
+}

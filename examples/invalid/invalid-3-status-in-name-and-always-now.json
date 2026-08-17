@@ -1,0 +1,24 @@
+{
+  "$comment": "INVALID — WHY (two production-observed anti-patterns): (1) CR-2 violation: the name encodes operational state ('(cerrado ahora)') — observed verbatim in the wild; state belongs in lifecycle_status/service_status so it can change without breaking name-based reconciliation, and so two publishers' opposite statuses are COMPARABLE fields, not prose. (2) The always-now anti-pattern: this feed's last_updated is regenerated per request (validator detects it by probing twice and seeing the value advance with the clock while content is unchanged) — worse than no signal, consumers can never detect change. Also note the record contradicts itself: name says closed, lifecycle_status says active. VALIDATOR ERRORS: data.places[0].name: operational state token detected in name ('cerrado') — move to service_status/lifecycle_status (CR-2) · envelope.last_updated: value advanced with the probe clock on identical content — generate at build/publish time, not per request.",
+  "last_updated": "2026-08-16T04:59:59Z",
+  "ttl": 300,
+  "version": "0.1.0",
+  "publisher_id": "example-app",
+  "license": "CC-BY-4.0",
+  "data": {
+    "places": [
+      {
+        "id": "912",
+        "publisher_id": "example-app",
+        "name": "Centro de acopio IE María Auxiliadora (cerrado ahora)",
+        "place_kind": "collection_center",
+        "municipality_code": "66170",
+        "address_text": "Cl. 43 #13-74, Dosquebradas",
+        "lifecycle_status": "active",
+        "last_confirmed_at": "2026-08-15T18:00:00Z",
+        "source": { "source_id": "example-app" },
+        "public_url": "https://example-app.invalid/lugares/912"
+      }
+    ]
+  }
+}

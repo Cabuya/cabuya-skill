@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cabuya.org/schemas/0.1/manifest.schema.json",
+  "title": "Cabuya publisher manifest (v0.1 DRAFT — working-group proposal)",
+  "type": "object",
+  "required": ["protocol", "publisher", "conformance_target", "license"],
+  "properties": {
+    "protocol": {
+      "type": "object",
+      "required": ["name", "spec_version"],
+      "properties": {
+        "name": { "type": "string", "const": "cabuya", "description": "The protocol name: cabuya (decided 2026-08-16; domains cabuya.org + cabuyaprotocol.org)." },
+        "spec_version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" }
+      }
+    },
+    "publisher": {
+      "type": "object",
+      "required": ["publisher_id", "canonical_url"],
+      "properties": {
+        "publisher_id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]{1,62}[a-z0-9]$",
+          "description": "Registry-assigned, human-readable, assigned once, never reassigned (R12)."
+        },
+        "canonical_url": { "type": "string", "format": "uri", "description": "Registry key is canonical URL + aliases, never a slug." },
+        "aliases": { "type": "array", "items": { "type": "string", "format": "uri" } },
+        "name": { "type": "string" },
+        "contact": { "type": "string", "description": "Org-level contact only (role address). MUST NOT be a personal address." }
+      }
+    },
+    "conformance_target": { "type": "string", "enum": ["L0", "L1", "L2", "L3", "L4"] },
+    "feeds": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "url", "entity"],
+        "properties": {
+          "name": { "type": "string" },
+          "url": { "type": "string", "format": "uri" },
+          "entity": { "type": "string", "enum": ["place"], "description": "v0.1: place only. Person-level entities MUST NOT appear (§7.1)." },
+          "profile": { "type": "string", "enum": ["core", "extended"], "default": "core" },
+          "municipality_code": { "type": "string", "pattern": "^\\d{5}$", "description": "DIVIPOLA, when the feed is a municipality shard." }
+        }
+      }
+    },
+    "api": {
+      "type": "object",
+      "properties": {
+        "base_url": { "type": "string", "format": "uri", "description": "RECOMMENDED shape: {origin}/api/public/v1/ (emergent ecosystem convention)." },
+        "write": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "auth": { "type": "string", "enum": ["none", "bearer"] }
+          }
+        }
+      }
+    },
+    "mcp": {
+      "type": "object",
+      "properties": {
+        "endpoint": { "type": "string", "format": "uri" },
+        "tools_language": { "type": "string", "description": "BCP 47 tag of tool identifiers (registry must not assume English)." }
+      }
+    },
+    "license": { "type": "string", "description": "SPDX identifier for the published data. REQUIRED — 1/20 apps declares one today and its absence blocks every consumer's legal review." },
+    "permitted_use": {
+      "type": "array",
+      "items": { "type": "string", "enum": ["display", "aggregate", "redistribute", "ai_answer", "ai_train"] },
+      "description": "Consent-to-reuse in the envelope, not in robots.txt dialects."
+    },
+    "crawl_policy_url": { "type": "string", "format": "uri" },
+    "events": { "type": "array", "items": { "type": "string" }, "description": "Registry event ids served, e.g. sismos-co-2026. Event-scoped registry, event-optional records (Q10)." },
+    "languages": { "type": "array", "items": { "type": "string" }, "description": "BCP 47. es is the required ecosystem baseline." },
+    "sunset_at": { "type": "string", "format": "date-time", "description": "Orderly wind-down declaration (§7.4)." }
+  },
+  "additionalProperties": true,
+  "$comment": "Unknown members MUST be preserved by consumers and MUST NOT cause validation failure (verdict H). x_{publisher}_{field} namespaced extensions always allowed."
+}

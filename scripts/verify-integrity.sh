@@ -22,8 +22,11 @@
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-SPEC_DIR="$REPO_ROOT/spec"
-CHECKSUMS="$SPEC_DIR/CHECKSUMS.txt"
+CHECKSUMS="$REPO_ROOT/spec/CHECKSUMS.txt"
+
+# Kept identical to generate-checksums.sh: the two must agree about what counts
+# as vendored, or one of them is silently not checking something.
+VENDORED_ROOTS="spec examples"
 
 # --- portable sha256 ---------------------------------------------------------
 # Linux has sha256sum; macOS has shasum. Neither is guaranteed, so failing with
@@ -43,14 +46,33 @@ sha256_of() {
 # Explicit, not a silent pass. The pack is built over several tasks and this
 # script exists from the first one so that the day the spec lands, the check
 # is already wired into CI rather than being remembered.
-if [ ! -d "$SPEC_DIR" ] || [ -z "$(find "$SPEC_DIR" -type f ! -name '.gitkeep' -print -quit)" ]; then
-  echo "spec/ holds no vendored files yet — nothing to verify."
+vendored_files() {
+  roots=""
+  for root in $VENDORED_ROOTS; do
+    [ -d "$REPO_ROOT/$root" ] && roots="$roots $REPO_ROOT/$root"
+  done
+  [ -n "$roots" ] || return 0
+  # $roots is a space-separated list of directories built above. Splitting it
+  # is the intent: quoting would pass one nonexistent path named
+  # "/repo/spec /repo/examples".
+  # shellcheck disable=SC2086
+  find $roots -type f | sort
+}
+
+# "Nothing vendored yet" is only true if nothing has *ever* been vendored. If a
+# CHECKSUMS.txt exists, it lists files that are supposed to be here, and their
+# absence is the loudest possible failure — not a reason to skip the check.
+# (Found by the deletion test: without this ordering, removing the last vendored
+# file passed silently.)
+if [ ! -f "$CHECKSUMS" ] \
+   && [ -z "$(vendored_files | grep -v '\.gitkeep$' | head -1)" ]; then
+  echo "No vendored files yet — nothing to verify."
   echo "This is expected until the specification is vendored."
   exit 0
 fi
 
 if [ ! -f "$CHECKSUMS" ]; then
-  echo "ERROR: spec/ has files but no CHECKSUMS.txt." >&2
+  echo "ERROR: vendored files exist but there is no spec/CHECKSUMS.txt." >&2
   echo "A vendored specification without checksums is a fork nobody declared." >&2
   echo "Generate them with: bash scripts/generate-checksums.sh" >&2
   exit 1
@@ -58,8 +80,10 @@ fi
 
 # --- list mode ---------------------------------------------------------------
 if [ "${1:-}" = "--list" ]; then
-  echo "Vendored under spec/:"
-  awk '{print "  " $2}' "$CHECKSUMS"
+  echo "Vendored files:"
+  # Skip the comment header and any blank line — printing $2 of a prose line
+  # produces a list of stray words that looks like a list of files.
+  awk '/^[0-9a-f]{64}[[:space:]]/ { print "  " $2 }' "$CHECKSUMS"
   exit 0
 fi
 
@@ -71,7 +95,7 @@ while read -r expected path; do
   [ -z "$expected" ] && continue
   case "$expected" in \#*) continue ;; esac
 
-  full="$SPEC_DIR/$path"
+  full="$REPO_ROOT/$path"
   if [ ! -f "$full" ]; then
     echo "  ✗ $path — listed in CHECKSUMS.txt but missing" >&2
     failures=$((failures + 1))
@@ -91,16 +115,18 @@ done < "$CHECKSUMS"
 # A file present in spec/ but absent from CHECKSUMS.txt is the other half of
 # the same question: a document an adopter would read that nobody signed.
 while IFS= read -r found; do
-  relative="${found#"$SPEC_DIR"/}"
+  [ -n "$found" ] || continue
+  relative="${found#"$REPO_ROOT"/}"
   case "$relative" in
-    CHECKSUMS.txt | .gitkeep) continue ;;
+    spec/CHECKSUMS.txt) continue ;;
+    *.gitkeep) continue ;;
   esac
   if ! grep -q " $relative\$" "$CHECKSUMS"; then
-    echo "  ✗ $relative — present in spec/ but not listed in CHECKSUMS.txt" >&2
+    echo "  ✗ $relative — vendored but not listed in CHECKSUMS.txt" >&2
     failures=$((failures + 1))
   fi
 done <<EOF
-$(find "$SPEC_DIR" -type f | sort)
+$(vendored_files)
 EOF
 
 if [ "$failures" -gt 0 ]; then
@@ -114,4 +140,4 @@ if [ "$failures" -gt 0 ]; then
   exit 1
 fi
 
-echo "✅ vendored specification intact — $checked file(s) match CHECKSUMS.txt"
+echo "✅ vendored files intact — $checked file(s) match CHECKSUMS.txt"

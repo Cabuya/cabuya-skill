@@ -1,0 +1,16 @@
+# Where this vendored copy came from.
+#
+# Written by scripts/sync-spec.sh. Do not edit by hand — every field here is
+# what makes the copy traceable rather than merely present.
+
+repo        git@github.com:Cabuya/cabuya.org.git
+ref         d82cbe3
+commit      d82cbe3fbb4fe29797db2ad25cf3334aed447a5e
+spec_version 0.1
+
+# Vendored verbatim from the repository above:
+#   spec/schemas/       spec/vocab/       spec/EXCLUSIONS.md
+#   examples/valid/     examples/invalid/
+#
+# Authored in this repository, checksummed alongside them:
+#   spec/PROTOCOL_SUMMARY.md

@@ -1,0 +1,23 @@
+{
+  "$comment": "INVALID — WHY: the first record OMITS the last_confirmed_at key entirely. Omission is non-conforming; the honest form is last_confirmed_at: null ('never confirmed'). The distinction is the trust core's whole point: a consumer must always be able to render an age or 'sin confirmar' — silence is not an answer. VALIDATOR ERROR: data.places[0]: required property 'last_confirmed_at' is missing (did you mean to publish last_confirmed_at: null?).",
+  "last_updated": "2026-08-16T04:00:00Z",
+  "ttl": 300,
+  "version": "0.1.0",
+  "publisher_id": "example-app",
+  "license": "CC-BY-4.0",
+  "data": {
+    "places": [
+      {
+        "id": "300",
+        "publisher_id": "example-app",
+        "name": "Punto de acopio El Remanso",
+        "place_kind": "collection_center",
+        "municipality_code": "66001",
+        "address_text": "Av. principal El Remanso, junto al centro de salud",
+        "lifecycle_status": "active",
+        "source": { "source_id": "example-app" },
+        "public_url": "https://example-app.invalid/lugares/300"
+      }
+    ]
+  }
+}
