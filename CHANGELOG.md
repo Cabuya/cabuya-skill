@@ -28,6 +28,17 @@ knows whether the pack applies to them.
   payload that makes the pack useful with no network.
 - `examples/` — the five teaching examples, vendored and checksummed with
   everything else.
+- `validate/SKILL.md` — run the validator, parse the JSON report, present
+  findings grouped by what to do next. Declares no `Edit` or `Write`:
+  measuring does not change anything.
+- `setup/SKILL.md` — the doctor. Diagnoses; never installs.
+- `bin/run-validator.sh` — four-order resolution, with the npx range derived
+  from `spec/VERSION` rather than hardcoded.
+- `bin/degraded-check.mjs` — the offline partial answer. Reports
+  "schema-valid; conformance unmeasured", never "conforming", and names both
+  the probes it could not run and the checks it does not implement.
+- `shared/validator.md`, `shared/error-codes.md` — the report shape, the exit
+  codes, and what each check-id family means in a fix loop.
 - `scripts/sync-spec.sh` — the only writer of `spec/`. Records provenance,
   refuses to run over uncommitted work at either end, and regenerates
   checksums.
@@ -50,9 +61,7 @@ knows whether the pack applies to them.
   specification. Reports honestly that nothing is vendored yet rather than
   passing silently.
 
-**Installable, but not yet complete.** The router, the trust contract, the
-installer and the vendored specification are in — an agent that installs the
-pack can already answer questions about the protocol offline. The five
-sub-skills that *do* the work (implement, consume, validate, publish-status,
-setup) land in the releases that follow, and `setup.sh` reports each one as
-"not in this version" until it does.
+**Three of five sub-skills.** `implement`, `validate` and `setup` are in, so
+an agent can take an app from a database to a measured feed. `consume` and
+`publish-status` land next, and both `setup.sh` and the router report them as
+absent rather than pretending otherwise.

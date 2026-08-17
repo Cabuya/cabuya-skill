@@ -72,14 +72,14 @@ follows the standard well will have one. It still does not travel: contact is
 `public_url` plus link-out, fetched on demand from the origin under the
 origin's own consent model.
 
-**The converter drops these columns rather than failing on them.** That is
-deliberate — a hard failure would strand exactly the teams this on-ramp exists
-for, and the sheet is their working tool, not a publication artefact. It
-reports what it dropped, every run, by column name.
+**Drop these columns rather than failing on them.** That is deliberate — a
+hard failure would strand exactly the teams this on-ramp exists for, and the
+sheet is their working tool, not a publication artefact. Report what was
+dropped, every run, by column name.
 
 The one exception is a **declared institutional** contact: an organization's
 switchboard or role address, published by that organization, declared as such
-in the conversion config. Never a person's number, however senior, and never a
+by a human before the conversion is written. Never a person's number, however senior, and never a
 volunteer's mobile. If the sheet mixes both in one column — and it usually
 does — the column is dropped and that is the right outcome.
 
@@ -109,16 +109,106 @@ it is `updated_at`.
 
 ## 5. Converting
 
-```bash
-npx cabuya-validator convert \
-  --input "https://docs.google.com/spreadsheets/d/…/export?format=csv" \
-  --publisher-id example-app \
-  --municipality 66001 \
-  --site https://example.invalid \
-  --output places.json
+**The agent does this conversion.** The blueprint names two converters — this
+skill and the validator's `convert` mode — and **`convert` is not in the
+shipped CLI yet**. Do not tell a team to run it; `npx cabuya-validator --help`
+lists `validate`, `explain`, `checks` and `init`, and nothing else.
+
+So write the converter. It is about forty lines, it lives in the team's
+repository, and it is the artefact that keeps working after you leave.
+
+```js
+// scripts/sheet-to-cabuya.mjs
+//
+// Reads the HXL-tagged sheet and writes the Cabuya feed.
+// The hashtag row is the mapping; this script is the machinery.
+
+import { writeFile, mkdir } from 'node:fs/promises';
+
+// Use a real CSV parser — `csv-parse/sync`, or the team's existing one. A
+// split on commas breaks on the first address containing one, and addresses
+// in this dataset contain commas constantly ("Mz 7 y 8, Villa Consota").
+import { parse as parseCsv } from 'csv-parse/sync';
+
+const SHEET_CSV = process.env.SHEET_CSV_URL;
+const PUBLISHER_ID = 'example-app';
+const SITE = 'https://example.invalid';
+const MUNICIPALITY = { pereira: '66001' }; // verify — mapping/divipola.md
+
+// Tags that must never reach the feed. Contact is public_url plus link-out,
+// fetched from the origin under the origin's own consent model — a hashtag
+// does not change that. Dropped rather than fatal: a hard failure would
+// strand exactly the teams this on-ramp exists for.
+const DROP = new Set(['#contact+phone', '#contact+email', '#contact+name']);
+
+const FIELD = {
+  '#loc+name': 'name',
+  '#loc+address': 'address_text',
+  '#geo+lat': 'lat',
+  '#geo+lon': 'lon',
+  '#adm2+code': 'municipality_code',
+  '#date+checked': 'last_confirmed_at',
+  '#meta+url': 'public_url',
+  '#description': 'description',
+};
+
+const rows = parseCsv(await (await fetch(SHEET_CSV)).text(), { relax_column_count: true });
+const [headers, tags, ...data] = rows;
+
+const dropped = tags.filter((tag) => DROP.has(tag));
+for (const tag of dropped) {
+  console.warn(`dropped: ${tag} (column "${headers[tags.indexOf(tag)]}")`);
+}
+
+const places = data.map((row, index) => {
+  const place = {
+    id: String(index + 1),
+    publisher_id: PUBLISHER_ID,
+    lifecycle_status: 'active',
+    source: { source_id: PUBLISHER_ID, source_kind: 'first_party' },
+
+    // No #date+checked column means no confirmation event. Present and null —
+    // never filled from a "last updated" column, which records an edit.
+    last_confirmed_at: null,
+  };
+
+  tags.forEach((tag, column) => {
+    if (DROP.has(tag) || !FIELD[tag]) return;
+    const value = row[column]?.trim();
+    if (value) place[FIELD[tag]] = value;
+  });
+
+  return place;
+});
+
+await mkdir('cabuya', { recursive: true });
+await writeFile(
+  'cabuya/places.json',
+  JSON.stringify(
+    {
+      last_updated: new Date().toISOString(), // the run IS the publication
+      ttl: 21600,
+      version: '0.1.0',
+      publisher_id: PUBLISHER_ID,
+      license: 'CC-BY-4.0',
+      permitted_use: ['display', 'aggregate'],
+      data: { places },
+    },
+    null,
+    2
+  )
+);
+
+console.log(`Wrote ${places.length} places; dropped ${dropped.length} columns.`);
 ```
 
-It reports what it did, including what it dropped:
+Then validate what it produced — that part *does* exist:
+
+```bash
+npx cabuya-validator validate cabuya/places.json --no-network
+```
+
+**Report every drop and every unresolved value to the team, by column name:**
 
 ```
 Read 42 rows, 11 tagged columns.
@@ -127,13 +217,12 @@ Read 42 rows, 11 tagged columns.
   resolved: #adm2 "Pereira" → 66001 (39 rows)
   UNRESOLVED: #adm2 "Pereria" → ? (3 rows)      — typo? fix in the sheet
   last_confirmed_at: null on all rows (no #date+checked column)
-Wrote places.json — 42 places, profile core.
 ```
 
-**The unresolved municipalities are the human's decision, not the converter's.**
-It does not guess at a typo, because "Pereria" could be a misspelling of
-Pereira or a real place in another department, and picking wrong files a record
-in the wrong municipality — findable by nobody who needs it.
+**The unresolved municipalities are the human's decision, not yours.** Do not
+guess at a typo: "Pereria" could be a misspelling of Pereira or a real place in
+another department, and picking wrong files a record in the wrong municipality
+— findable by nobody who needs it.
 
 ### The stable URL
 
@@ -147,7 +236,7 @@ tab named `voluntarios` is a person-level dataset one click from public.
 
 ## 6. Hosting the produced feed
 
-The converter outputs a file. It still has to be served, and the requirements
+The script outputs a file. It still has to be served, and the requirements
 are the ordinary ones.
 
 **GitHub Pages** is the usual answer for a team with no host: free, serves
@@ -178,13 +267,10 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: { node-version: '24' }
-      - run: |
-          npx cabuya-validator convert \
-            --input "${{ vars.SHEET_CSV_URL }}" \
-            --publisher-id example-app \
-            --municipality 66001 \
-            --site https://example.invalid \
-            --output cabuya/places.json
+      - run: node scripts/sheet-to-cabuya.mjs
+        env:
+          SHEET_CSV_URL: ${{ vars.SHEET_CSV_URL }}
+      - run: npx cabuya-validator validate cabuya/places.json --no-network
       - run: |
           # Only commit when the data changed. Otherwise `last_updated` becomes
           # a heartbeat every six hours rather than a data signal, which is the
@@ -209,11 +295,11 @@ converter can make the JSON right; it cannot make the host serve it correctly.
 Soft-404, CORS and always-now are measured where the file is served, so the
 discovery checks in every other guide apply here unchanged.
 
-**A conversion is not a conformance measurement.** The converter reports
-schema validity. `validate` reports conformance, and only against the deployed
-URL. Do not tell a team they are L2 because the file converted.
+**A conversion is not a conformance measurement.** The script reports what it
+read and what it dropped. `validate` reports conformance, and only against the
+deployed URL. Do not tell a team they are L2 because the file converted.
 
-**The sheet keeps its own risks.** The converter reads a snapshot. If somebody
+**The sheet keeps its own risks.** The script reads a snapshot. If somebody
 adds a `Teléfono` column next week, the next run drops it and reports the drop
 — and if somebody puts a phone number into the `Dirección` column, the free-text
 screen is what catches it, imperfectly. Say this out loud to the team: **the

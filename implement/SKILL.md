@@ -188,9 +188,10 @@ to the path the stack actually serves at `/.well-known/cabuya.json`.
 
 ## Phase 5 · Loop
 
-Run the validator — `../shared/validator.md` documents the exit codes and
-the JSON report shape, and ships with the `validate` sub-skill in the next
-release. **Parse the JSON report rather than the text**, fix, repeat.
+Run the validator through [`../bin/run-validator.sh`](../bin/run-validator.sh);
+[`../shared/validator.md`](../shared/validator.md) documents the resolution
+order, the exit codes and the report shape. **Parse the JSON report rather
+than the text**, fix, repeat.
 
 **Maximum 8 iterations.** Then stop and summarize what remains and why. A loop
 that has not converged in eight passes has hit something structural, and the
