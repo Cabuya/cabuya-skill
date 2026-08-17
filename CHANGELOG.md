@@ -28,6 +28,14 @@ knows whether the pack applies to them.
   payload that makes the pack useful with no network.
 - `examples/` — the five teaching examples, vendored and checksummed with
   everything else.
+- `consume/SKILL.md` + `consume/rules.md` — reading the network without
+  breaking its rules. The six MUSTs, each with the self-test that keeps it
+  true after the next refactor.
+- `publish-status/SKILL.md` — the manifest is a claim; this keeps it true. It
+  refuses a `conformance_target` above the measured level, and makes winding
+  down a supported path rather than an outage.
+- `shared/crawl-policy.md` — the honour rule, including the clause that holds
+  even when a human asks directly.
 - `validate/SKILL.md` — run the validator, parse the JSON report, present
   findings grouped by what to do next. Declares no `Edit` or `Write`:
   measuring does not change anything.
@@ -61,7 +69,8 @@ knows whether the pack applies to them.
   specification. Reports honestly that nothing is vendored yet rather than
   passing silently.
 
-**Three of five sub-skills.** `implement`, `validate` and `setup` are in, so
-an agent can take an app from a database to a measured feed. `consume` and
-`publish-status` land next, and both `setup.sh` and the router report them as
-absent rather than pretending otherwise.
+**All five sub-skills are in.** An agent can take an app from a database to a
+measured feed, read its peers' feeds under the six consumption rules, publish
+a level it has actually earned, and wind down without stranding anybody. What
+remains before a release is the acceptance test — the procedure that decides
+whether an installed pack really does teach an offline agent the protocol.
