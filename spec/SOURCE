@@ -4,8 +4,8 @@
 # what makes the copy traceable rather than merely present.
 
 repo        git@github.com:Cabuya/cabuya.org.git
-ref         d82cbe3
-commit      d82cbe3fbb4fe29797db2ad25cf3334aed447a5e
+ref         b008d09
+commit      b008d090488708731807d9b4f1bb6b2aa4363397
 spec_version 0.1
 
 # Vendored verbatim from the repository above:
@@ -14,6 +14,7 @@ spec_version 0.1
 #
 # Generated from that repository (derived, never hand-edited):
 #   spec/SPA_EXCLUSIONS.md  <- packages/validator/src/spa-exclusions.ts
+#   spec/CORS.md            <- packages/validator/src/cors-recipes.ts
 #
 # Authored in this repository, checksummed alongside them:
 #   spec/PROTOCOL_SUMMARY.md

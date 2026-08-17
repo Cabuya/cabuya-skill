@@ -250,6 +250,28 @@ else
   say "  spa:      SKIPPED — node or the source module is unavailable" >&2
 fi
 
+# --- the CORS recipes ---------------------------------------------------------
+#
+# The fifth generated copy, for the same reason as the fourth. `ENV007` is the
+# check a publisher who did everything else right fails first — the header is a
+# property of the server, so an agent that writes perfect JSON and stops has
+# left its user one silent step short of L2.
+
+CORS_SRC="$SRC_ROOT/packages/validator/src/cors-recipes.ts"
+
+if [ -f "$CORS_SRC" ] && command -v node >/dev/null 2>&1; then
+  if node --experimental-strip-types \
+       "$REPO_ROOT/scripts/lib/extract-cors-recipes.mjs" \
+       "$CORS_SRC" > "$SPEC_DIR/CORS.md" 2>/dev/null; then
+    say "  cors:     $(grep -c '^### ' "$SPEC_DIR/CORS.md") hosts"
+  else
+    rm -f "$SPEC_DIR/CORS.md"
+    say "  cors:     SKIPPED — could not load $CORS_SRC" >&2
+  fi
+else
+  say "  cors:     SKIPPED — node or the source module is unavailable" >&2
+fi
+
 # --- provenance --------------------------------------------------------------
 
 printf '%s\n' "$VERSION" > "$SPEC_DIR/VERSION"
@@ -271,6 +293,7 @@ spec_version $VERSION
 #
 # Generated from that repository (derived, never hand-edited):
 #   spec/SPA_EXCLUSIONS.md  <- packages/validator/src/spa-exclusions.ts
+#   spec/CORS.md            <- packages/validator/src/cors-recipes.ts
 #
 # Authored in this repository, checksummed alongside them:
 #   spec/PROTOCOL_SUMMARY.md
