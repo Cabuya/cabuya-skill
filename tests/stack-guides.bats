@@ -15,7 +15,8 @@ setup() {
 }
 
 guides() {
-  find "$STACKS" -name '*.md' ! -name 'README.md' | sort
+  # _TEMPLATE.md is the scaffold for writing a guide, not a guide.
+  find "$STACKS" -name '*.md' ! -name 'README.md' ! -name '_*' | sort
 }
 
 
@@ -239,4 +240,60 @@ guides() {
   flowed "$readme" | grep -qi 'good-first-issue:stack'
   # The rule that keeps the four copies in step.
   flowed "$readme" | grep -qi 'do not edit the exclusion text in a guide'
+}
+
+# --- the guide surface stays closed: index, detection, instantiation ----------
+
+@test "the template for contributors exists and the README points at it" {
+  [ -f "$STACKS/_TEMPLATE.md" ]
+  grep -q "_TEMPLATE.md" "$STACKS/README.md"
+}
+
+@test "every guide is in the index, and the index names only real guides" {
+  while IFS= read -r guide; do
+    name="$(basename "$guide")"
+    grep -q "($name)" "$STACKS/README.md" || {
+      echo "$name is not in the index"
+      return 1
+    }
+  done < <(guides)
+  for linked in $(grep -oE '\]\([a-z-]+\.md\)' "$STACKS/README.md" | tr -d '](){}'); do
+    [ -f "$STACKS/$linked" ] || { echo "index links a missing guide: $linked"; return 1; }
+  done
+}
+
+@test "every guide has a detection rule in stack-detection.md" {
+  # A recipe nobody can be routed to is dead weight that looks like coverage.
+  while IFS= read -r guide; do
+    name="$(basename "$guide")"
+    grep -q "$name" "$REPO/shared/stack-detection.md" || {
+      echo "$name has no detection rule"
+      return 1
+    }
+  done < <(guides)
+}
+
+@test "the DWP renderer instantiates against every guide" {
+  # The task spec's {stack_guide} placeholder must resolve for each recipe —
+  # a guide the renderer rejects is a stack the plan cannot serve.
+  while IFS= read -r guide; do
+    fixture="$BATS_TEST_TMPDIR/render-$(basename "$guide" .md)"
+    mkdir -p "$fixture"
+    run node "$REPO/bin/render-dwp.mjs" --repo "$fixture" \
+      --stack-guide "implement/stacks/$(basename "$guide")" \
+      --publisher-id example-app --target L2 \
+      --manifest-url https://app.example.invalid/.well-known/cabuya.json \
+      --feed-path public/cabuya/places.json
+    [ "$status" -eq 0 ] || { echo "renderer rejects $(basename "$guide")"; return 1; }
+  done < <(guides)
+}
+
+@test "every guide that exports from a data store shows the high-water mark" {
+  for guide in nextjs-supabase php-ssr django rails express-node \
+               astro-static firebase-firestore; do
+    flowed "$STACKS/$guide.md" | grep -qi 'high-water mark' || {
+      echo "$guide.md does not show the high-water-mark pattern"
+      return 1
+    }
+  done
 }

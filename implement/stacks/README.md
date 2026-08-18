@@ -1,6 +1,6 @@
 # Stack guides
 
-Four guides, one skeleton. Each takes the six-phase flow in
+Nine guides, one skeleton. Each takes the six-phase flow in
 [`../SKILL.md`](../SKILL.md) and instantiates it for a family of applications —
 same order, same guardrails, different code.
 
@@ -10,9 +10,19 @@ same order, same guardrails, different code.
 | [`vite-spa-supabase.md`](vite-spa-supabase.md) | Vite/React SPA, Supabase, static host. No server. |
 | [`php-ssr.md`](php-ssr.md) | Laravel and plain PHP, Apache or nginx, shared hosting. |
 | [`static-sheet.md`](static-sheet.md) | No backend and no developer. A spreadsheet becomes a feed. |
+| [`django.md`](django.md) | Django + Postgres. The public-sector shape. |
+| [`rails.md`](rails.md) | Ruby on Rails, server-rendered. |
+| [`express-node.md`](express-node.md) | Express or a plain Node service; SQL or Mongo. |
+| [`astro-static.md`](astro-static.md) | Astro — and Eleventy/Hugo by analogy. |
+| [`firebase-firestore.md`](firebase-firestore.md) | Firestore + Firebase Hosting, often serverless. |
 
 Not sure which? Run `bash ../../shared/context.sh` and read
 [`../../shared/stack-detection.md`](../../shared/stack-detection.md).
+
+**Contributing a guide?** Start from [`_TEMPLATE.md`](_TEMPLATE.md) — it
+carries the eight sections with what each must contain, and
+`tests/stack-guides.bats` checks the mechanical half before a human reads a
+word.
 
 ## Reason, do not copy-paste
 

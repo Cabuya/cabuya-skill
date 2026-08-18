@@ -102,6 +102,10 @@ if exists package.json; then
     FRAMEWORK="sveltekit"
   elif exists vite.config.ts || exists vite.config.js; then
     FRAMEWORK="vite"
+  elif exists firebase.json; then
+    FRAMEWORK="firebase"
+  elif grep -q '"express"' "$REPO_ROOT/package.json" 2>/dev/null; then
+    FRAMEWORK="express"
   fi
 elif exists manage.py; then
   STACK="python"; FRAMEWORK="django"
@@ -132,7 +136,7 @@ fi
 # is the single most common reason a first feed 404s.
 
 case "$FRAMEWORK" in
-  nextjs|astro|nuxt|sveltekit|vite|remix)
+  nextjs|astro|nuxt|sveltekit|vite|remix|firebase|express)
     MANIFEST_PATH="$REPO_ROOT/public/.well-known/cabuya.json" ;;
   django)
     MANIFEST_PATH="$REPO_ROOT/static/.well-known/cabuya.json" ;;

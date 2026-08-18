@@ -10,7 +10,7 @@ guess stated confidently costs more than a question.
 
 ---
 
-## The five families
+## The nine families
 
 ### 1. Vite + React SPA (often + Supabase, often on Vercel/Netlify)
 
@@ -56,6 +56,8 @@ Prefer the build-time export unless the data genuinely changes between
 deploys. It is the cheapest thing that conforms, and it cannot accidentally
 implement the always-now anti-pattern.
 
+Guide: [`vite-spa-supabase.md`](../implement/stacks/vite-spa-supabase.md).
+
 ### 2. Next.js (App Router)
 
 **Fingerprint:** `next.config.{js,mjs,ts}` · `next` in dependencies ·
@@ -73,6 +75,8 @@ catch-all `[...slug]` route can shadow it.
 `export const dynamic = 'force-static'` or an explicit `revalidate`. Set
 `last_updated` from the data's own maximum `updated_at`, or from build time —
 never `new Date()` at request time.
+
+Guide: [`nextjs-supabase.md`](../implement/stacks/nextjs-supabase.md).
 
 ### 3. PHP server-rendered (often Laravel)
 
@@ -95,6 +99,8 @@ path in the registry entry, and add the `<link rel="cabuya">` fallback.
 header set explicitly. Do not rely on a global CORS middleware — see the
 entity-scoped grants rule in the deny-list.
 
+Guide: [`php-ssr.md`](../implement/stacks/php-ssr.md).
+
 ### 4. Django
 
 **Fingerprint:** `manage.py` · `settings.py` · `requirements.txt` or
@@ -111,7 +117,51 @@ check that the dot-directory is not filtered.
 **Feed:** a view returning `JsonResponse`, cached; or a management command
 writing a file on a schedule.
 
-### 5. Static site / no application server
+Guide: [`django.md`](../implement/stacks/django.md).
+
+### 5. Ruby on Rails
+
+**Fingerprint:** `config/application.rb` (decisive) · `Gemfile` with `rails` ·
+`db/schema.rb`.
+
+**Data layer:** `db/schema.rb` is the whole model in one authoritative file;
+`app/models/` for meaning. **Manifest goes in:** `public/.well-known/` —
+Rails serves `public/` before routing; verify the deployed origin because a
+reverse proxy may hide dot-directories. Guide: [`rails.md`](../implement/stacks/rails.md).
+
+### 6. Express / plain Node service
+
+**Fingerprint:** `express` in `package.json` dependencies **and** a
+`express()` call site (`server.js`, `app.js`, `src/index.*`) — the
+dependency alone is not sufficient. No `next.config.*`, no `vite.config.*`.
+
+**Data layer:** whatever the migrations or schema files say — `knexfile.js`,
+`prisma/schema.prisma`, Mongoose `new Schema`. **Manifest:** an explicit
+`express.static` mount registered **before** any catch-all; route order is
+the whole mechanism. Guide: [`express-node.md`](../implement/stacks/express-node.md).
+
+### 7. Astro / static generators
+
+**Fingerprint:** `astro.config.mjs|ts` (Astro) · `.eleventy.js` (Eleventy) ·
+`hugo.toml`/`config.toml` + `layouts/` (Hugo).
+
+**The one distinction that matters:** static output vs an SSR adapter —
+static output has no catch-all at all. **Manifest:** `public/` (Astro),
+passthrough copy (Eleventy), `static/` (Hugo); then verify the *host* serves
+dot-directories. Guide: [`astro-static.md`](../implement/stacks/astro-static.md).
+
+### 8. Firebase (Firestore + Hosting)
+
+**Fingerprint:** `firebase.json` (decisive) · `.firebaserc` ·
+`firestore.rules`.
+
+**Data layer:** schemaless — `firestore.rules` names the collections;
+converters and call sites hint the shape; sampled documents are the truth.
+**The trap:** `hosting.rewrites` with `"source": "**"`; static files win
+over rewrites, so ship the file and verify by fetching. Guide:
+[`firebase-firestore.md`](../implement/stacks/firebase-firestore.md).
+
+### 9. Static site / no application server
 
 **Fingerprint:** `index.html` and no framework config · Jekyll (`_config.yml`)
 · Hugo (`config.toml`) · Astro (`astro.config.mjs`) · plain files.
@@ -127,6 +177,8 @@ keeping `last_updated` honest, which means regenerating on a schedule rather
 than by hand.
 
 ---
+
+Guide: [`static-sheet.md`](../implement/stacks/static-sheet.md).
 
 ## Finding the data model, in order of reliability
 
