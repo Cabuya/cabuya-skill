@@ -21,7 +21,7 @@ jobs:
     name: SKILL.md frontmatter
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
@@ -32,7 +32,7 @@ jobs:
     name: Vendored specification intact
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       # The check that stops a hand-edited normative document reaching an
       # adopter's agent. Runs from the first commit, before anything is
       # vendored, so it is already wired the day the specification lands.
@@ -42,7 +42,7 @@ jobs:
     name: shellcheck
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Lint every shell script that exists
         run: |
           # Globbed rather than listed: the pack is built over several tasks,
@@ -67,7 +67,7 @@ jobs:
     name: bats
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Install bats-core
         run: sudo apt-get update && sudo apt-get install -y bats
       - name: Run the suite
@@ -82,7 +82,7 @@ jobs:
     name: bash 3.2 compatibility (macOS)
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       # macOS ships bash 3.2, and half the machines this pack runs on are
       # laptops. A script needing bash 4 fails there and nowhere else, which
       # is the worst place for it to fail.
@@ -102,7 +102,7 @@ jobs:
     name: Acceptance test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
@@ -143,7 +143,7 @@ jobs:
     name: Markdown links
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: gaurav-nelson/github-action-markdown-link-check@v1
         with:
           config-file: '.github/markdown-link-check.json'
@@ -155,7 +155,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: Every commit carries a Signed-off-by trailer
