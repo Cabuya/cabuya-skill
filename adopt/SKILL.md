@@ -95,12 +95,12 @@ Asked once, recorded once, in the ledger's `methodology` object:
   integration.
 
 **If the answer is yes** — hand the whole context to that methodology and get
-out of the way: give it the ordered tasks from `plan/tasks.json` with their
-acceptance criteria, validation commands and stop conditions, the four rules
-that ride with any plan (the PII decision is human; no level the validator
-did not measure; never *certified*; no person-level data), and the ledger
-contract so their plan still writes `.cabuya/adoption.json` after each task.
-Then name their entry command and stop planning.
+out of the way: emit the bundle per [`handover/README.md`](handover/README.md)
+(`bin/render-handover.mjs` — the ordered tasks with acceptance criteria,
+validation commands and stop conditions, the four non-negotiables that ride
+with any plan, and the ledger contract so their plan still writes
+`.cabuya/adoption.json` after each task). Then name their entry command and
+stop planning.
 
 **If the answer is no** — continue to Step 4.
 

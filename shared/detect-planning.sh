@@ -10,7 +10,7 @@
 #
 #   bash shared/detect-planning.sh
 #   {"dwp_installed":true,"dwp_path":".agents/skills/deepworkplan",
-#    "candidates":["github-spec-kit"],"ledger":"present",
+#    "candidates":["some-registry-id"],"ledger":"present",
 #    "ledger_contract":"1.0","ledger_newer_major":false,
 #    "methodology_recorded":"deepworkplan","pii_decided":"true",
 #    "plan_present":false,"plan_path":""}
