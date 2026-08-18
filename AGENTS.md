@@ -34,6 +34,9 @@ consume/              reading the network — the six MUSTs, with self-tests
 validate/             run the validator, read the report
 publish-status/       the manifest is a claim; keep it true
 setup/                the doctor
+plan/                 the adoption as a machine-readable task spec, and the
+  tasks.json            ledger contract (.cabuya/adoption.json) every
+  adoption.schema.json  planning path writes to
 shared/               notes several sub-skills read
   pii-deny-list.md    the gate that has no override
   crawl-policy.md     the rule that holds even when asked

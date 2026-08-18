@@ -1,0 +1,11 @@
+{
+  "contract": "1.0",
+  "created_at": "2026-08-18T14:00:00Z",
+  "updated_at": "2026-08-18T17:30:00Z",
+  "last_measured": {
+    "mode": "online",
+    "target": "https://app.example.invalid/.well-known/cabuya.json",
+    "level": "L2",
+    "measured_at": "2026-08-18T17:30:00Z"
+  }
+}

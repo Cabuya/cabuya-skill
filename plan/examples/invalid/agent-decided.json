@@ -1,0 +1,11 @@
+{
+  "contract": "1.0",
+  "created_at": "2026-08-18T14:00:00Z",
+  "updated_at": "2026-08-18T15:10:00Z",
+  "pii_decision": {
+    "decided_by": "agent",
+    "decided_at": "2026-08-18T15:10:00Z",
+    "approved_columns": ["direccion"],
+    "rejected_columns": ["contacto"]
+  }
+}

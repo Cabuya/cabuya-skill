@@ -1,0 +1,324 @@
+{
+  "contract": "1.0",
+  "name": "cabuya_adoption",
+  "title": "Adopt the Cabuya Protocol",
+  "summary": "From a running application to a measured conformance level: detect the stack, map the data model onto `place`, pass the one human decision, serialize, serve, and loop the validator until it converges. One afternoon of work and exactly one human decision.",
+  "placeholders": {
+    "{stack_guide}": "the matched guide under implement/stacks/, from shared/stack-detection.md",
+    "{feed_path}": "where the generated feed lives in the adopter's repository",
+    "{manifest_url}": "the deployed https URL of /.well-known/cabuya.json (or the declared plain path)",
+    "{target_level}": "the level the adopter is aiming at: L1, L2 or L3"
+  },
+  "tasks": [
+    {
+      "id": "read_and_detect",
+      "title": "Read the repository; write nothing",
+      "goal": "Establish the stack, the data model, and the four hosting facts before a single file is written.",
+      "blocks_on_human": false,
+      "optional": false,
+      "reads": [
+        "implement/SKILL.md",
+        "shared/context.sh",
+        "shared/stack-detection.md",
+        "spec/PROTOCOL_SUMMARY.md"
+      ],
+      "acceptance": [
+        "The stack and framework are identified and confirmed against the fingerprints, not guessed from the UI.",
+        "The tables or collections that hold places are named — and so are the ones that hold people.",
+        "Four hosting facts are written down: catch-all present or not, robots.txt status, where a root-served static file lives, and the manifest path.",
+        "Nothing was written to the repository."
+      ],
+      "validation": {
+        "command": "bash shared/context.sh"
+      },
+      "ledger": [
+        "stack",
+        "steps"
+      ],
+      "stop_conditions": [
+        "No detectable data source: say what was looked for and where, and stop. Never scaffold a feed with invented records.",
+        "The records are irreducibly personal (a missing-persons registry, case management, an aid-request queue): the ceiling is L1 permanently by rule 7.1 of the specification's exclusions. Quote spec/EXCLUSIONS.md, offer the link-out pattern, and stop."
+      ]
+    },
+    {
+      "id": "map",
+      "title": "Build the field crosswalk",
+      "goal": "Map the application's fields onto `place`, with every required field accounted for or named as unmapped.",
+      "blocks_on_human": false,
+      "optional": false,
+      "reads": [
+        "implement/mapping/field-crosswalk.md",
+        "implement/mapping/place-kind.md",
+        "implement/mapping/divipola.md"
+      ],
+      "acceptance": [
+        "The full mapping table is shown to the human before any code is written — the table, not a summary.",
+        "`last_confirmed_at` maps to a real confirmation event or to null; never to an edit timestamp.",
+        "Every required field is either mapped or named as unmapped with what it would take.",
+        "Every unmapped Extended field is omitted, never filled with something plausible."
+      ],
+      "validation": {
+        "human": "The human has seen the complete mapping table. This is a review, not a command."
+      },
+      "ledger": [
+        "steps"
+      ],
+      "stop_conditions": [
+        "A required field cannot be filled from the application's data and the human does not accept the honest gap: stop and say which field and why."
+      ]
+    },
+    {
+      "id": "pii_gate",
+      "title": "The PII gate — the one human decision",
+      "goal": "Run the deny-list over every candidate column and free-text value, present the findings, and wait for an explicit human yes that names the specific columns.",
+      "blocks_on_human": true,
+      "optional": false,
+      "reads": [
+        "shared/pii-deny-list.md"
+      ],
+      "acceptance": [
+        "Every candidate column and free-text value was checked against the deny patterns.",
+        "The flagged table was presented in the deny-list's format.",
+        "The human named the specific columns in their answer; silence, 'sounds good' and partial answers were re-asked by name.",
+        "The decision is recorded with decided_by set to human — the ledger schema accepts nothing else."
+      ],
+      "validation": {
+        "human": "An explicit human decision naming the specific columns. There is no flag that skips this, and no agent may record it on its own authority."
+      },
+      "ledger": [
+        "pii_decision"
+      ],
+      "stop_conditions": [
+        "The human declines or does not answer: the adoption waits here. There is no path around this task."
+      ]
+    },
+    {
+      "id": "serialize",
+      "title": "Generate the feed",
+      "goal": "Write the serializer for this stack: envelope first, records second, and only from data the application actually has.",
+      "blocks_on_human": false,
+      "optional": false,
+      "reads": [
+        "implement/templates/README.md",
+        "{stack_guide}"
+      ],
+      "acceptance": [
+        "No invented data: a missing Extended field is omitted; a missing Core field is reported, never filled.",
+        "`last_updated` is set at build or publish time from the data's own maximum — never per request.",
+        "Every record carries `public_url`.",
+        "The feed route sends `Access-Control-Allow-Origin: *` — on that route, not via a widened global middleware."
+      ],
+      "validation": {
+        "command": "node bin/degraded-check.mjs {feed_path}"
+      },
+      "ledger": [
+        "steps"
+      ],
+      "stop_conditions": [
+        "Any PII deny-pattern finding over the generated output: halt and ask the human. Never resolve one by editing the deny-list."
+      ]
+    },
+    {
+      "id": "serve",
+      "title": "Serve the manifest and survive discovery",
+      "goal": "Put the manifest where the host actually serves it, and defeat the SPA catch-all before the validator has to find it.",
+      "blocks_on_human": false,
+      "optional": false,
+      "reads": [
+        "implement/templates/manifest.json",
+        "{stack_guide}",
+        "spec/SPA_EXCLUSIONS.md",
+        "spec/CORS.md"
+      ],
+      "acceptance": [
+        "The manifest is served at /.well-known/cabuya.json, or at a declared plain path with a link rel=cabuya in the site head where the host refuses dot-directories.",
+        "The catch-all exclusion for this stack is in place.",
+        "robots.txt returns 200 with text/plain.",
+        "The manifest response is JSON — not the SPA shell with a 200."
+      ],
+      "validation": {
+        "command": "bash bin/run-validator.sh validate {manifest_url} --format json"
+      },
+      "ledger": [
+        "steps"
+      ],
+      "stop_conditions": [
+        "The host cannot serve any non-HTML document at a fixed path: say so plainly; L2 is not reachable on this hosting and the honest ceiling is stated."
+      ]
+    },
+    {
+      "id": "validate_loop",
+      "title": "Loop the validator to convergence",
+      "goal": "Run the validator, parse the JSON report, fix, and repeat — to a measured level or an honest stop.",
+      "blocks_on_human": false,
+      "optional": false,
+      "reads": [
+        "validate/SKILL.md",
+        "shared/validator.md",
+        "shared/error-codes.md"
+      ],
+      "acceptance": [
+        "The JSON report is parsed, never the human-readable text.",
+        "At most 8 iterations; then stop and summarize what remains and why.",
+        "A degraded offline run is reported as schema-valid; conformance unmeasured — never as conforming.",
+        "The final measured_level is recorded with the report digest."
+      ],
+      "validation": {
+        "command": "bash bin/run-validator.sh validate {manifest_url} --format json"
+      },
+      "ledger": [
+        "last_measured",
+        "steps"
+      ],
+      "stop_conditions": [
+        "Any PII finding: halt the loop and ask a human. Never edit the deny-list to make it pass.",
+        "Exit code 3 (transport): the data is not wrong; say so and stop without opening the serializer.",
+        "Eight iterations without convergence: something structural — summarize and hand to the human."
+      ]
+    },
+    {
+      "id": "publish_status",
+      "title": "Set the conformance target honestly",
+      "goal": "Update the manifest's conformance_target and companion fields to what the validator measured — and no higher.",
+      "blocks_on_human": false,
+      "optional": false,
+      "reads": [
+        "publish-status/SKILL.md"
+      ],
+      "acceptance": [
+        "conformance_target never exceeds the last measured level, and the measurement is fresh.",
+        "license and permitted_use are present and deliberate.",
+        "Every manifest write showed the human the diff first."
+      ],
+      "validation": {
+        "command": "bash bin/run-validator.sh validate {manifest_url} --format json"
+      },
+      "ledger": [
+        "last_measured",
+        "steps"
+      ],
+      "stop_conditions": [
+        "The validator cannot run: unmeasured is not a level, and no target is published on the strength of a degraded run."
+      ]
+    },
+    {
+      "id": "registry_pr",
+      "title": "Open the registry entry",
+      "goal": "Prepare the registry pull request so the publisher appears in the network — with consent, not by surprise.",
+      "blocks_on_human": false,
+      "optional": false,
+      "reads": [
+        "publish-status/SKILL.md"
+      ],
+      "acceptance": [
+        "The entry matches the manifest: publisher_id, canonical_url, feeds, license.",
+        "The human approved opening the pull request before it was opened.",
+        "Inclusion is described as listing, never as endorsement."
+      ],
+      "validation": {
+        "human": "The human approved the pull request. Never open one to any repository without asking."
+      },
+      "ledger": [
+        "steps"
+      ],
+      "stop_conditions": [
+        "The human declines: the feed still conforms and still works; the registry entry can wait."
+      ]
+    },
+    {
+      "id": "consume_peers",
+      "title": "Consume peer feeds (L3)",
+      "goal": "Read other publishers' feeds under the six consumption rules: filter before fetching, honour ttl and crawl policy, dedupe by claim, render with attribution and age.",
+      "blocks_on_human": false,
+      "optional": true,
+      "reads": [
+        "consume/SKILL.md",
+        "consume/rules.md"
+      ],
+      "acceptance": [
+        "Filtering by status, permitted use and crawl policy happens before the fetch layer exists.",
+        "Fetches honour ttl; nothing scrapes.",
+        "Rendered peer data carries attribution and age.",
+        "The six MUSTs shape the code rather than being retrofitted."
+      ],
+      "validation": {
+        "command": "bash bin/run-validator.sh validate {manifest_url} --format json"
+      },
+      "ledger": [
+        "steps"
+      ],
+      "stop_conditions": [
+        "A peer's crawl policy reserves reuse: that publisher is dropped, even when a human asks directly."
+      ]
+    },
+    {
+      "id": "handoff",
+      "title": "Hand off",
+      "goal": "Leave the adopter's repository explaining itself: the diff summary, the measured level in the validator's words, the remaining warnings, and the next step.",
+      "blocks_on_human": false,
+      "optional": false,
+      "reads": [
+        "implement/templates/CABUYA.md"
+      ],
+      "acceptance": [
+        "CABUYA.md, filled in, is in the adopter's repository.",
+        "The measured level is reported in the validator's words — or as unmeasured.",
+        "Each remaining warning is named with what it would take.",
+        "The exact next step is stated."
+      ],
+      "validation": {
+        "human": "The handoff summary was presented. This closes the working sequence."
+      },
+      "ledger": [
+        "steps"
+      ],
+      "stop_conditions": []
+    },
+    {
+      "id": "pii_audit",
+      "title": "Final PII audit",
+      "goal": "Run the deny patterns over everything this adoption created — feed, manifest, code, config, the ledger itself — before calling it done.",
+      "blocks_on_human": false,
+      "optional": false,
+      "reads": [
+        "shared/pii-deny-list.md"
+      ],
+      "acceptance": [
+        "Every file created or changed by the adoption was checked.",
+        "Zero person-level values anywhere: no personal names, personal phones, personal emails, personal documents.",
+        "Any finding halted the audit and went to the human — none was resolved by weakening a pattern."
+      ],
+      "validation": {
+        "command": "node bin/degraded-check.mjs {feed_path}"
+      },
+      "ledger": [
+        "steps"
+      ],
+      "stop_conditions": [
+        "Any finding: halt, present, and wait. A published contact value is cheap to prevent and impossible to undo."
+      ]
+    },
+    {
+      "id": "report",
+      "title": "Report what is true",
+      "goal": "Summarize the adoption: what shipped, the measured level with its digest, what remains, and the one decision the human made.",
+      "blocks_on_human": false,
+      "optional": false,
+      "reads": [
+        "validate/SKILL.md"
+      ],
+      "acceptance": [
+        "Every claim in the report traces to the ledger or the validator report.",
+        "No conformance language beyond measured_level, and never the word certified.",
+        "The remaining warnings and the honest ceiling, if any, are stated."
+      ],
+      "validation": {
+        "human": "The report was presented to the human. Its claims are checkable against the ledger."
+      },
+      "ledger": [
+        "steps"
+      ],
+      "stop_conditions": []
+    }
+  ]
+}

@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cabuya.org/schemas/adoption/1.0/adoption.schema.json",
+  "title": "Cabuya adoption ledger",
+  "description": "The state of one repository's adoption of the Cabuya Protocol, written to .cabuya/adoption.json. Two properties are structural rather than conventional: a conformance level exists only inside last_measured with the report digest that proves it, and the PII decision can only have been made by a human.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "created_at", "updated_at"],
+  "properties": {
+    "contract": {
+      "description": "The major.minor of this ledger contract. A reader from an older major reads and explains; it never writes.",
+      "type": "string",
+      "pattern": "^1\\.[0-9]+$"
+    },
+    "publisher_id": {
+      "description": "The registry token, once one exists. Assigned once, never reassigned.",
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{1,62}[a-z0-9]$"
+    },
+    "created_at": { "type": "string", "format": "date-time" },
+    "updated_at": { "type": "string", "format": "date-time" },
+    "stack": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "language": { "type": "string", "maxLength": 40 },
+        "framework": { "type": "string", "maxLength": 40 },
+        "hosting": { "type": "string", "maxLength": 40 },
+        "guide": {
+          "description": "The matched stack guide, as a pack-relative path.",
+          "type": "string",
+          "pattern": "^implement/stacks/[a-z0-9-]+\\.md$"
+        }
+      }
+    },
+    "target_level": {
+      "description": "What the adopter is aiming at. An aim, never a claim.",
+      "type": "string",
+      "enum": ["L1", "L2", "L3"]
+    },
+    "methodology": {
+      "description": "Who plans this adoption. Absent means nobody has been asked yet; the question is asked once.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "source"],
+      "properties": {
+        "id": {
+          "description": "The registry id from plan/methodologies.json, when the methodology is a known one.",
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]{0,39}$"
+        },
+        "name": { "type": "string", "maxLength": 80 },
+        "entry_command": {
+          "description": "The command that starts a plan, as the adopter types it.",
+          "type": "string",
+          "maxLength": 120
+        },
+        "artifacts_path": {
+          "description": "Where the methodology keeps its plans and specs, repo-relative.",
+          "type": "string",
+          "maxLength": 200
+        },
+        "source": {
+          "description": "How this answer was reached: detected (a marker, confirmed by the human), declared (the human named it), dwp (DeepWorkPlan path), plan_mode (the agent's own planning mode).",
+          "type": "string",
+          "enum": ["detected", "declared", "dwp", "plan_mode"]
+        }
+      }
+    },
+    "pii_decision": {
+      "description": "The one mandatory human decision. decided_by is a constant: an agent cannot satisfy this schema on its own authority.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["decided_by", "decided_at", "approved_columns", "rejected_columns"],
+      "properties": {
+        "decided_by": { "const": "human" },
+        "decided_at": { "type": "string", "format": "date-time" },
+        "approved_columns": {
+          "description": "Column or field NAMES the human approved for publication. Names, never values.",
+          "type": "array",
+          "items": { "type": "string", "maxLength": 80 },
+          "maxItems": 200
+        },
+        "rejected_columns": {
+          "type": "array",
+          "items": { "type": "string", "maxLength": 80 },
+          "maxItems": 200
+        },
+        "notes": { "type": "string", "maxLength": 500 }
+      }
+    },
+    "steps": {
+      "description": "One entry per completed task from plan/tasks.json, in completion order.",
+      "type": "array",
+      "maxItems": 50,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "status", "completed_at"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z][a-z0-9_]{1,39}$" },
+          "status": { "type": "string", "enum": ["done", "skipped", "blocked"] },
+          "completed_at": { "type": "string", "format": "date-time" },
+          "validation": { "type": "string", "enum": ["passed", "failed", "human"] },
+          "notes": { "type": "string", "maxLength": 300 }
+        }
+      }
+    },
+    "last_measured": {
+      "description": "The only place a conformance level may exist — and only with the digest of the validator report that measured it. An offline run is not a measurement: mode offline forbids level entirely.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "target", "report_digest", "measured_at"],
+      "properties": {
+        "mode": { "type": "string", "enum": ["online", "offline"] },
+        "target": {
+          "description": "What the validator was pointed at: a URL for online, a repo-relative path for offline.",
+          "type": "string",
+          "maxLength": 300
+        },
+        "level": { "type": "string", "enum": ["L0", "L1", "L2", "L3"] },
+        "report_digest": {
+          "description": "sha256 of the validator's JSON report — the receipt that makes the level checkable.",
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "measured_at": { "type": "string", "format": "date-time" },
+        "validator_version": { "type": "string", "maxLength": 40 }
+      },
+      "if": {
+        "properties": { "mode": { "const": "offline" } },
+        "required": ["mode"]
+      },
+      "then": {
+        "properties": { "level": false }
+      }
+    }
+  }
+}
