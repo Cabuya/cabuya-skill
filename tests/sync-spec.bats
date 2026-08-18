@@ -8,7 +8,7 @@
 # here touches the real vendored tree.
 
 setup() {
-  REPO_ROOT="$(cd "$BATS_TEST_DIRNAME/.." && pwd)"
+  REPO_ROOT="$(cd "$BATS_TEST_DIRNAME/../skills/cabuya" && pwd)"
   WORK="$(mktemp -d)"
 
   # git needs an identity to commit, and the runner may not have one.

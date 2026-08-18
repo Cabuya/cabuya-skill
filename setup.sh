@@ -27,7 +27,7 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PACK_NAME="cabuya"
 
 # The pack root is this repository root — SKILL.md sits beside this script.
-PACK_DIR="$SCRIPT_DIR"
+PACK_DIR="$SCRIPT_DIR/skills/cabuya"
 
 # Sub-skills, in the order the router lists them. A directory with no SKILL.md
 # is skipped rather than linked: the pack is built in stages, and a symlink to
@@ -169,7 +169,7 @@ while [ $# -gt 0 ]; do
       HOST="$2"; shift 2 ;;
     --host=*) HOST="${1#--host=}"; shift ;;
     --dry-run) DRY_RUN="yes"; shift ;;
-    --verify) exec bash "$SCRIPT_DIR/scripts/verify-integrity.sh" ;;
+    --verify) exec bash "$PACK_DIR/scripts/verify-integrity.sh" ;;
     -h|--help) usage; exit 0 ;;
     *) die "Unknown option: $1 (try --help)" ;;
   esac
@@ -190,7 +190,7 @@ say ""
 # exactly the failure the checksums exist to catch, and catching it after the
 # symlinks exist is too late. (Security review of the guided-adoption plan.)
 if [ "$DRY_RUN" = "no" ]; then
-  if ! bash "$SCRIPT_DIR/scripts/verify-integrity.sh" >/dev/null 2>&1; then
+  if ! bash "$PACK_DIR/scripts/verify-integrity.sh" >/dev/null 2>&1; then
     die "vendored specification does not match CHECKSUMS.txt — refusing to link.
 Run: bash scripts/verify-integrity.sh   (to see what changed)"
   fi

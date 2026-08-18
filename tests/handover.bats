@@ -9,7 +9,7 @@
 
 setup() {
   load helpers
-  REPO="$(cd "$BATS_TEST_DIRNAME/.." && pwd)"
+  REPO="$(cd "$BATS_TEST_DIRNAME/../skills/cabuya" && pwd)"
   REGISTRY="$REPO/plan/methodologies.json"
   RENDER="$REPO/bin/render-handover.mjs"
 }

@@ -9,8 +9,9 @@
 
 setup() {
   load helpers
-  REPO="$(cd "$BATS_TEST_DIRNAME/.." && pwd)"
-  ACC="$REPO/tests/acceptance"
+  ROOT="$(cd "$BATS_TEST_DIRNAME/.." && pwd)"
+  REPO="$ROOT/skills/cabuya"
+  ACC="$ROOT/tests/acceptance"
 }
 
 @test "a perfect transcript scores 10/10 and 3/3" {
@@ -114,8 +115,8 @@ assert len(report['part_a']['results']) == 10
   # laundered.
   run="$ACC/runs/2026-08-18-claude-code.md"
   says "$run" 'session that wrote the pack'
-  says "$REPO/docs/ACCEPTANCE_TEST.md" 'session that wrote the pack'
-  says "$REPO/docs/ACCEPTANCE_TEST.md" 'release blocker'
+  says "$ROOT/docs/ACCEPTANCE_TEST.md" 'session that wrote the pack'
+  says "$ROOT/docs/ACCEPTANCE_TEST.md" 'release blocker'
 }
 
 # --- the compatibility matrix -------------------------------------------------
@@ -124,22 +125,22 @@ assert len(report['part_a']['results']) == 10
   # Two copies of one fact; this is the half of the check that lives here.
   vendored="$(grep -A3 'protocol:' "$REPO/SKILL.md" | grep 'vendored_spec' | sed 's/.*"\(.*\)".*/\1/')"
   [ "$vendored" = "0.1.0" ]
-  grep -q "| 0.1.x | $vendored |" "$REPO/docs/COMPATIBILITY.md"
+  grep -q "| 0.1.x | $vendored |" "$ROOT/docs/COMPATIBILITY.md"
 }
 
 @test "the compatibility matrix agrees with spec/VERSION" {
   version="$(tr -d ' \n' < "$REPO/spec/VERSION")"
   grep -q "supported_spec_versions: \[\"$version\"\]" "$REPO/SKILL.md"
-  grep -qE "\| 0\.1\.x \| 0\.1\.0 \| $version \|" "$REPO/docs/COMPATIBILITY.md"
+  grep -qE "\| 0\.1\.x \| 0\.1\.0 \| $version \|" "$ROOT/docs/COMPATIBILITY.md"
 }
 
 @test "COMPATIBILITY.md states all seven versioning rules" {
   for rule in V1 V2 V3 V4 V5 V6 V7; do
-    grep -q "\*\*$rule\*\*" "$REPO/docs/COMPATIBILITY.md" || {
+    grep -q "\*\*$rule\*\*" "$ROOT/docs/COMPATIBILITY.md" || {
       echo "rule $rule is missing"
       return 1
     }
   done
   # The one with teeth.
-  grep -q '180-day producer window' "$REPO/docs/COMPATIBILITY.md"
+  grep -q '180-day producer window' "$ROOT/docs/COMPATIBILITY.md"
 }

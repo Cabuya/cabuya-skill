@@ -26,7 +26,7 @@ jobs:
         with:
           python-version: '3.11'
       - run: pip install pyyaml
-      - run: python3 scripts/validate-frontmatter.py
+      - run: python3 skills/cabuya/scripts/validate-frontmatter.py
 
   integrity:
     name: Vendored specification intact
@@ -36,7 +36,7 @@ jobs:
       # The check that stops a hand-edited normative document reaching an
       # adopter's agent. Runs from the first commit, before anything is
       # vendored, so it is already wired the day the specification lands.
-      - run: bash scripts/verify-integrity.sh
+      - run: bash skills/cabuya/scripts/verify-integrity.sh
 
   shellcheck:
     name: shellcheck
@@ -49,7 +49,7 @@ jobs:
           # and a hard-coded path to a file that does not exist yet is a red
           # build that says nothing about the code.
           files=""
-          for candidate in setup.sh scripts/*.sh shared/*.sh bin/*.sh tests/acceptance/*.sh; do
+          for candidate in setup.sh skills/cabuya/scripts/*.sh skills/cabuya/shared/*.sh skills/cabuya/bin/*.sh tests/acceptance/*.sh; do
             [ -f "$candidate" ] && files="$files $candidate"
           done
           if [ -z "$files" ]; then
@@ -90,13 +90,13 @@ jobs:
         run: /bin/bash --version
       - name: Every script parses under bash 3.2
         run: |
-          for candidate in setup.sh scripts/*.sh shared/*.sh bin/*.sh tests/acceptance/*.sh; do
+          for candidate in setup.sh skills/cabuya/scripts/*.sh skills/cabuya/shared/*.sh skills/cabuya/bin/*.sh tests/acceptance/*.sh; do
             [ -f "$candidate" ] || continue
             /bin/bash -n "$candidate" || exit 1
             echo "ok: $candidate"
           done
       - name: The integrity check runs under bash 3.2
-        run: /bin/bash scripts/verify-integrity.sh
+        run: /bin/bash skills/cabuya/scripts/verify-integrity.sh
 
   acceptance:
     name: Acceptance test

@@ -6,7 +6,7 @@
 # proven, and the honest phrase is pinned to the byte.
 
 setup() {
-  REPO="$(cd "$BATS_TEST_DIRNAME/.." && pwd)"
+  REPO="$(cd "$BATS_TEST_DIRNAME/../skills/cabuya" && pwd)"
   TMP="$(mktemp -d)"
   # A scratch pack, so a fake `npx` on PATH cannot reach the real repository.
   PACK="$TMP/pack"

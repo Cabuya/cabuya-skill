@@ -14,7 +14,8 @@
 
 setup() {
   load helpers
-  REPO="$(cd "$BATS_TEST_DIRNAME/.." && pwd)"
+  ROOT="$(cd "$BATS_TEST_DIRNAME/.." && pwd)"
+  REPO="$ROOT/skills/cabuya"
   VERSION="$(tr -d ' \n\r' < "$REPO/spec/VERSION")"
 }
 
@@ -28,7 +29,7 @@ setup() {
 }
 
 @test "the compatibility matrix names the same version" {
-  says "$REPO/docs/COMPATIBILITY.md" "| $VERSION |"
+  says "$ROOT/docs/COMPATIBILITY.md" "| $VERSION |"
 }
 
 @test "the runner derives its validator range rather than hardcoding one" {
@@ -41,7 +42,7 @@ setup() {
 
 @test "COMPATIBILITY states all seven versioning rules" {
   for rule in V1 V2 V3 V4 V5 V6 V7; do
-    says "$REPO/docs/COMPATIBILITY.md" "$rule" || {
+    says "$ROOT/docs/COMPATIBILITY.md" "$rule" || {
       echo "rule $rule is missing"
       return 1
     }
@@ -50,8 +51,8 @@ setup() {
 
 @test "the CHANGELOG says which spec versions this release supports (V7)" {
   # So an adopter reading one file knows whether the release applies to them.
-  says "$REPO/CHANGELOG.md" "Specification versions supported"
-  says "$REPO/CHANGELOG.md" "$VERSION"
+  says "$ROOT/CHANGELOG.md" "Specification versions supported"
+  says "$ROOT/CHANGELOG.md" "$VERSION"
 }
 
 @test "the install commands name the repository that exists" {
@@ -65,6 +66,6 @@ setup() {
 @test "AGENTS.md and CLAUDE.md are the same document" {
   # Other agents read AGENTS.md; Claude Code reads CLAUDE.md. Two files would
   # be two sets of instructions.
-  [ -L "$REPO/CLAUDE.md" ]
-  [ "$(readlink "$REPO/CLAUDE.md")" = "AGENTS.md" ]
+  [ -L "$ROOT/CLAUDE.md" ]
+  [ "$(readlink "$ROOT/CLAUDE.md")" = "AGENTS.md" ]
 }

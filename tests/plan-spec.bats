@@ -9,7 +9,7 @@
 
 setup() {
   load helpers
-  REPO="$(cd "$BATS_TEST_DIRNAME/.." && pwd)"
+  REPO="$(cd "$BATS_TEST_DIRNAME/../skills/cabuya" && pwd)"
   TASKS="$REPO/plan/tasks.json"
   TASKS_MD="$REPO/plan/TASKS.md"
   SCHEMA="$REPO/plan/adoption.schema.json"

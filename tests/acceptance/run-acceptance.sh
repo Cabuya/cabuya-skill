@@ -25,7 +25,7 @@
 set -euo pipefail
 
 HERE="$(cd "$(dirname "$0")" && pwd)"
-PACK_ROOT="$(cd "$HERE/../.." && pwd)"
+PACK_ROOT="$(cd "$HERE/../../skills/cabuya" && pwd)"
 RUNS="$HERE/runs"
 
 say() { printf '%s\n' "$*"; }

@@ -10,7 +10,7 @@
 # Every test runs against a scratch tree, never the real spec/.
 
 setup() {
-  REPO_ROOT="$(cd "$BATS_TEST_DIRNAME/.." && pwd)"
+  REPO_ROOT="$(cd "$BATS_TEST_DIRNAME/../skills/cabuya" && pwd)"
   WORK="$(mktemp -d)"
   mkdir -p "$WORK/scripts" "$WORK/spec" "$WORK/examples/valid"
   cp "$REPO_ROOT/scripts/verify-integrity.sh" "$WORK/scripts/"

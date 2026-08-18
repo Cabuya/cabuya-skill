@@ -14,7 +14,7 @@ because the specification travels inside the pack rather than being fetched.
 > or `git clone … && bash setup.sh` — both proven on a clean clone; the
 > transcript lives with the release. Remove it by deleting the clone and the
 > symlinks `setup.sh` printed; the only files it ever writes in *your* repo
-> are the two named in [`TRUST.md`](TRUST.md).
+> are the two named in [`TRUST.md`](skills/cabuya/TRUST.md).
 
 ---
 
@@ -41,9 +41,8 @@ vendored specification, with citations, offline, writing nothing.
 Prefer the vendored install (reviewable in a pull request, pinned):
 
 ```bash
-git clone --depth 1 https://github.com/Cabuya/cabuya-skill \
-  .agents/skills/cabuya && rm -rf .agents/skills/cabuya/.git
-bash .agents/skills/cabuya/setup.sh   # links it into every agent it detects
+git clone --depth 1 https://github.com/Cabuya/cabuya-skill vendor/cabuya-skill
+bash vendor/cabuya-skill/setup.sh   # links skills/cabuya into every agent it detects
 ```
 
 The guided page for humans: **[cabuya.org/start](https://cabuya.org/start)**.
@@ -107,8 +106,8 @@ The four supported paths, with the reasoning behind each, are documented at
 short version:
 
 ```bash
-git clone --depth 1 https://github.com/Cabuya/cabuya-skill \
-  .agents/skills/cabuya && rm -rf .agents/skills/cabuya/.git
+git clone --depth 1 https://github.com/Cabuya/cabuya-skill vendor/cabuya-skill
+bash vendor/cabuya-skill/setup.sh
 ```
 
 Vendored into your own repository is the recommended path: reviewable in a pull

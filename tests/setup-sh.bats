@@ -12,14 +12,15 @@ setup() {
   export HOME="$TMP/home"
   mkdir -p "$HOME"
 
-  # A pack with every sub-skill present, so the linking logic is exercised in
-  # full regardless of which ones the real repository currently ships.
-  PACK="$TMP/pack"
-  mkdir -p "$PACK"
-  cp "$REPO_ROOT/setup.sh" "$PACK/setup.sh"
-  cp "$REPO_ROOT/SKILL.md" "$PACK/SKILL.md"
+  # A repo with every sub-skill present, mirroring the real layout — setup.sh
+  # at the root, the pack under skills/cabuya — so the linking logic is
+  # exercised in full regardless of which sub-skills the repository ships.
+  ROOT="$TMP/repo"
+  PACK="$ROOT/skills/cabuya"
   mkdir -p "$PACK/scripts"
-  cp "$REPO_ROOT/scripts/verify-integrity.sh" "$PACK/scripts/"
+  cp "$REPO_ROOT/setup.sh" "$ROOT/setup.sh"
+  cp "$REPO_ROOT/skills/cabuya/SKILL.md" "$PACK/SKILL.md"
+  cp "$REPO_ROOT/skills/cabuya/scripts/verify-integrity.sh" "$PACK/scripts/"
   for skill in implement consume validate publish-status setup; do
     mkdir -p "$PACK/$skill"
     printf -- '---\nname: cabuya-%s\n---\n' "$skill" > "$PACK/$skill/SKILL.md"
@@ -31,7 +32,7 @@ teardown() {
 }
 
 @test "--help explains itself and exits clean" {
-  run bash "$PACK/setup.sh" --help
+  run bash "$ROOT/setup.sh" --help
   [ "$status" -eq 0 ]
   [[ "$output" == *"--host"* ]]
   [[ "$output" == *"cabuya-implement"* ]]
@@ -40,7 +41,7 @@ teardown() {
 }
 
 @test "--host claude links the router and all five sub-skills" {
-  run bash "$PACK/setup.sh" --host claude
+  run bash "$ROOT/setup.sh" --host claude
   [ "$status" -eq 0 ]
 
   [ -L "$HOME/.claude/skills/cabuya" ]
@@ -51,18 +52,18 @@ teardown() {
 }
 
 @test "--host cursor links into cursor's directory, not claude's" {
-  run bash "$PACK/setup.sh" --host cursor
+  run bash "$ROOT/setup.sh" --host cursor
   [ "$status" -eq 0 ]
   [ -L "$HOME/.cursor/skills/cabuya" ]
   [ ! -e "$HOME/.claude/skills/cabuya" ]
 }
 
 @test "running it twice changes nothing and fails nothing" {
-  run bash "$PACK/setup.sh" --host claude
+  run bash "$ROOT/setup.sh" --host claude
   [ "$status" -eq 0 ]
   first="$(readlink "$HOME/.claude/skills/cabuya-implement")"
 
-  run bash "$PACK/setup.sh" --host claude
+  run bash "$ROOT/setup.sh" --host claude
   [ "$status" -eq 0 ]
   second="$(readlink "$HOME/.claude/skills/cabuya-implement")"
 
@@ -73,7 +74,7 @@ teardown() {
   mkdir -p "$HOME/.claude/skills/cabuya-implement"
   printf 'somebody was working here\n' > "$HOME/.claude/skills/cabuya-implement/notes.md"
 
-  run bash "$PACK/setup.sh" --host claude
+  run bash "$ROOT/setup.sh" --host claude
   [ "$status" -eq 0 ]
   [[ "$output" == *"a real file or directory is already there"* ]]
 
@@ -83,32 +84,32 @@ teardown() {
 }
 
 @test "--dry-run writes nothing at all" {
-  run bash "$PACK/setup.sh" --host claude --dry-run
+  run bash "$ROOT/setup.sh" --host claude --dry-run
   [ "$status" -eq 0 ]
   [[ "$output" == *"dry run"* ]]
   [ ! -e "$HOME/.claude/skills/cabuya" ]
 }
 
 @test "an unknown --host is an error, not a silent no-op" {
-  run bash "$PACK/setup.sh" --host emacs
+  run bash "$ROOT/setup.sh" --host emacs
   [ "$status" -ne 0 ]
   [[ "$output" == *"Unknown agent"* ]]
 }
 
 @test "an unknown flag is rejected rather than ignored" {
-  run bash "$PACK/setup.sh" --hosts claude
+  run bash "$ROOT/setup.sh" --hosts claude
   [ "$status" -ne 0 ]
   [[ "$output" == *"Unknown option"* ]]
 }
 
 @test "--host with no value fails instead of defaulting" {
-  run bash "$PACK/setup.sh" --host
+  run bash "$ROOT/setup.sh" --host
   [ "$status" -ne 0 ]
   [[ "$output" == *"Missing value"* ]]
 }
 
 @test "auto-detect says so plainly when no agent is installed" {
-  run bash "$PACK/setup.sh"
+  run bash "$ROOT/setup.sh"
   [ "$status" -eq 0 ]
   [[ "$output" == *"No agent found"* ]]
   [[ "$output" == *"--host all"* ]]
@@ -116,21 +117,21 @@ teardown() {
 
 @test "auto-detect finds an agent by its config directory" {
   mkdir -p "$HOME/.cursor"
-  run bash "$PACK/setup.sh"
+  run bash "$ROOT/setup.sh"
   [ "$status" -eq 0 ]
   [ -L "$HOME/.cursor/skills/cabuya" ]
 }
 
 @test "a sub-skill this version does not ship is reported, not linked" {
   rm -rf "$PACK/consume"
-  run bash "$PACK/setup.sh" --host claude
+  run bash "$ROOT/setup.sh" --host claude
   [ "$status" -eq 0 ]
   [[ "$output" == *"cabuya-consume — not in this version"* ]]
   [ ! -e "$HOME/.claude/skills/cabuya-consume" ]
 }
 
 @test "it refuses to run from outside the pack" {
-  cp "$PACK/setup.sh" "$TMP/stray-setup.sh"
+  cp "$ROOT/setup.sh" "$TMP/stray-setup.sh"
   run bash "$TMP/stray-setup.sh" --host claude
   [ "$status" -ne 0 ]
   [[ "$output" == *"No SKILL.md"* ]]
@@ -140,7 +141,7 @@ teardown() {
   # Integrity runs BEFORE symlinks exist — after is too late.
   clone="$BATS_TEST_TMPDIR/tampered"
   cp -r "$REPO_ROOT" "$clone"
-  printf 'drift\n' >> "$clone/spec/EXCLUSIONS.md"
+  printf 'drift\n' >> "$clone/skills/cabuya/spec/EXCLUSIONS.md"
   run env HOME="$BATS_TEST_TMPDIR/home" bash "$clone/setup.sh" --host claude
   [ "$status" -ne 0 ]
   [[ "$output" == *"refusing to link"* ]]

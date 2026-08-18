@@ -1,8 +1,8 @@
 # AGENTS.md — working on this repository
 
 For any AI coding assistant, and for humans, operating on `cabuya-skill`.
-This is about **building the pack**. Using it is [`SKILL.md`](SKILL.md); what
-it will and will not do on a machine is [`TRUST.md`](TRUST.md).
+This is about **building the pack**. Using it is [`SKILL.md`](skills/cabuya/SKILL.md); what
+it will and will not do on a machine is [`TRUST.md`](skills/cabuya/TRUST.md).
 
 ## What this repository is
 
@@ -22,10 +22,17 @@ review.
 
 ## Layout
 
+The pack follows the family convention (`deepworkplan-skill`, `agent-skill`,
+`ai-diff-reviewer`): **everything an installed agent reads lives under
+`skills/cabuya/`**, and the repository root holds what only contributors
+touch — this file, the README, the installer, `tests/`, `docs/`, CI. Paths
+below are relative to `skills/cabuya/` unless marked root.
+
 ```
-SKILL.md              the router — routes and does nothing else
-TRUST.md              what it will and will not do, with a self-audit
-setup.sh              multi-agent installer; links, never copies
+setup.sh              multi-agent installer at the repo root; links, never copies
+skills/cabuya/        THE PACK — everything an agent reads lives here
+  SKILL.md            the router — routes and does nothing else
+  TRUST.md            what it will and will not do, with a self-audit
 adopt/                the front door — orient, ask who plans, hand off
 explain/              what/how/why, answered from the vendored spec, cited
 implement/            the adoption flow — the six phases and the PII gate
@@ -87,8 +94,8 @@ the standard changes here.
 **To take a new upstream version:**
 
 ```bash
-bash scripts/sync-spec.sh --from https://github.com/Cabuya/cabuya.org --ref v0.2.0
-bash scripts/verify-integrity.sh
+bash skills/cabuya/scripts/sync-spec.sh --from https://github.com/Cabuya/cabuya.org --ref v0.2.0
+bash skills/cabuya/scripts/verify-integrity.sh
 ```
 
 Commit the vendored files and the regenerated `CHECKSUMS.txt` **in the same
@@ -136,10 +143,10 @@ disagree about fails CI rather than somebody's laptop months later.
 ## Tests
 
 ```bash
-bats tests/                              # everything
-python3 scripts/validate-frontmatter.py
-bash scripts/verify-integrity.sh
-npx --yes shellcheck -f gcc setup.sh shared/*.sh scripts/*.sh bin/*.sh
+bats tests/                              # everything (from the repo root)
+python3 skills/cabuya/scripts/validate-frontmatter.py
+bash skills/cabuya/scripts/verify-integrity.sh
+npx --yes shellcheck -f gcc setup.sh skills/cabuya/{shared,scripts,bin}/*.sh
 ```
 
 **Contract tests over prose are the norm here**, not an oddity — they fail
@@ -160,7 +167,7 @@ machines this runs on are laptops. No associative arrays, no `mapfile`, no
 
 The most useful contribution this pack takes, tagged
 `good-first-issue:stack`. The bar is specific rather than high, and it is in
-[`implement/stacks/README.md`](implement/stacks/README.md) — eight sections in
+[`implement/stacks/README.md`](skills/cabuya/implement/stacks/README.md) — eight sections in
 order, fingerprints that *distinguish*, where person-level columns hide in
 that stack, a serializer that would run, and the catch-all fix **quoted from
 `spec/SPA_EXCLUSIONS.md` rather than restated**.

@@ -114,9 +114,8 @@ reviewable in a pull request, pinned to a commit, and works offline.
 
 ```bash
 # 1. Vendored (recommended)
-git clone --depth 1 https://github.com/Cabuya/cabuya-skill \
-  .agents/skills/cabuya && rm -rf .agents/skills/cabuya/.git
-ln -s .agents .claude    # if the repo does not already have it
+git clone --depth 1 https://github.com/Cabuya/cabuya-skill vendor/cabuya-skill
+bash vendor/cabuya-skill/setup.sh    # links skills/cabuya into every agent it detects
 
 # 2. Installer script (auto-detects which agents are present)
 curl -fsSL https://cabuya.org/skill/install.sh -o install.sh
@@ -167,7 +166,7 @@ Adding support for a new spec MINOR is a skill MINOR bump; dropping a spec
 MAJOR is a skill MAJOR bump, and may not happen inside the specification's
 180-day producer window. This pack supports at most two spec MAJORs at once,
 matching the specification's own rule. Every release states which spec
-versions it supports in [`CHANGELOG.md`](CHANGELOG.md), so an adopter reading
+versions it supports in [`CHANGELOG.md`](../../CHANGELOG.md), so an adopter reading
 one file knows whether it applies to them.
 
 ## What this pack will and will not do on your machine

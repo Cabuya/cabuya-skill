@@ -10,7 +10,7 @@ conformance claim nobody measured is worth nothing. A pack built on that
 argument does not get to ask for trust on its word.
 
 Source of truth: <https://github.com/Cabuya/cabuya-skill>. Apache-2.0. The
-security policy is [`SECURITY.md`](SECURITY.md); this is its install-time
+security policy is [`SECURITY.md`](../../SECURITY.md); this is its install-time
 companion.
 
 ## What this pack is
@@ -174,7 +174,7 @@ wc -l */SKILL.md SKILL.md
 ```
 
 If any of those turns up something this file did not tell you about, that is a
-security issue and [`SECURITY.md`](SECURITY.md) says how to report it
+security issue and [`SECURITY.md`](../../SECURITY.md) says how to report it
 privately. A gap between what this file claims and what the pack does is the
 most serious kind of bug this project can have.
 

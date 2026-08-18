@@ -7,7 +7,7 @@
 # break naive string concatenation.
 
 setup() {
-  CONTEXT="$(cd "$BATS_TEST_DIRNAME/.." && pwd)/shared/context.sh"
+  CONTEXT="$(cd "$BATS_TEST_DIRNAME/../skills/cabuya" && pwd)/shared/context.sh"
   TMP="$(mktemp -d)"
   # Detection must not be influenced by the agent running the test suite.
   unset CABUYA_AGENT_TOOL CABUYA_STACK CABUYA_FRAMEWORK CABUYA_MANIFEST_PATH

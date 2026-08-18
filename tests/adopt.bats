@@ -8,7 +8,8 @@
 
 setup() {
   load helpers
-  REPO="$(cd "$BATS_TEST_DIRNAME/.." && pwd)"
+  ROOT="$(cd "$BATS_TEST_DIRNAME/.." && pwd)"
+  REPO="$ROOT/skills/cabuya"
   ADOPT="$REPO/adopt/SKILL.md"
   ROUTER="$REPO/SKILL.md"
   DETECT="$REPO/shared/detect-planning.sh"
@@ -169,7 +170,7 @@ detect() {
 # --- installation surface -----------------------------------------------------
 
 @test "setup.sh links adopt with the other sub-skills" {
-  grep -q 'SUBSKILLS="adopt ' "$REPO/setup.sh"
+  grep -q 'SUBSKILLS="adopt ' "$ROOT/setup.sh"
 }
 
 @test "TRUST.md names both files the pack may write, and how to remove them" {

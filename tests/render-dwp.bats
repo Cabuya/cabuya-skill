@@ -9,7 +9,7 @@
 
 setup() {
   load helpers
-  REPO="$(cd "$BATS_TEST_DIRNAME/.." && pwd)"
+  REPO="$(cd "$BATS_TEST_DIRNAME/../skills/cabuya" && pwd)"
   FIXTURE="$BATS_TEST_TMPDIR/adopter"
   mkdir -p "$FIXTURE"
   PLAN="$FIXTURE/.dwp/plans/PLAN_cabuya_adoption"

@@ -6,7 +6,7 @@
 
 setup() {
   load helpers
-  REPO="$(cd "$BATS_TEST_DIRNAME/.." && pwd)"
+  REPO="$(cd "$BATS_TEST_DIRNAME/../skills/cabuya" && pwd)"
   RULES="$REPO/consume/rules.md"
   CONSUME="$REPO/consume/SKILL.md"
   PUBLISH="$REPO/publish-status/SKILL.md"

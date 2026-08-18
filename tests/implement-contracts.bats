@@ -13,7 +13,7 @@
 
 setup() {
   load helpers
-  REPO="$(cd "$BATS_TEST_DIRNAME/.." && pwd)"
+  REPO="$(cd "$BATS_TEST_DIRNAME/../skills/cabuya" && pwd)"
   DENY="$REPO/shared/pii-deny-list.md"
   IMPL="$REPO/implement/SKILL.md"
 }
