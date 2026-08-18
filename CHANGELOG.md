@@ -6,9 +6,38 @@ pack's supported specification versions declared in the router's frontmatter.
 
 ## [Unreleased]
 
+## [0.1.0] — 2026-08-18
+
 **Specification versions supported by this release: 0.1** (vendored copy
 `0.1.0`). Rule V7: every release states this, so an adopter reading one file
 knows whether the pack applies to them.
+
+First installable release. Both install paths — `npx skills add
+Cabuya/cabuya-skill` and `git clone … && bash setup.sh` — proven on a clean
+clone before this entry was written.
+
+### Added in 0.1.0
+
+- `adopt/` — the front door. One sentence orients, asks who plans (the
+  team's own spec-driven methodology → DeepWorkPlan → the agent's own plan
+  mode, in that order of respect), and hands off. Resumes without re-asking
+  anything recorded.
+- `plan/` — the adoption as a machine-readable task spec (`tasks.json`,
+  methodology-neutral by test) and the ledger contract for
+  `.cabuya/adoption.json`: a level exists only beside the digest of the
+  report that measured it, and the PII decision can only be human.
+- `explain/` — what, how and why, answered from the vendored spec with
+  citations, plus the read-only preview of what adoption would mean in the
+  current repository.
+- `bin/render-dwp.mjs` and `bin/render-handover.mjs` — the DWP renderer and
+  the foreign-methodology context bundle, both driven by `plan/tasks.json`.
+- `bin/check-ledger.mjs` — offline ledger validation.
+- `shared/detect-planning.sh` — DWP, methodology markers, ledger and plan
+  detection as one line of JSON; `plan/methodologies.json` is the only place
+  a methodology is named.
+- Five stack guides — `django`, `rails`, `express-node`, `astro-static`,
+  `firebase-firestore` — plus `_TEMPLATE.md` for contributors; stack
+  detection grows to nine families.
 
 ### Added
 

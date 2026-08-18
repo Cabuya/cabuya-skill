@@ -7,10 +7,14 @@ Install it and your coding agent knows the schema, the conformance levels, the
 exclusions and the validator's check ids. It works with **no network at all**,
 because the specification travels inside the pack rather than being fetched.
 
-> **Status: in development.** The skeleton and its standards layer are here;
-> the router, the sub-skills and the vendored specification land in the tasks
-> that follow. Nothing here is installable yet, and this README will stop
-> saying so on the day it is.
+> **Status: installable.** Release 0.1.0 — the router, seven sub-skills
+> (`adopt`, `explain`, `implement`, `consume`, `validate`, `publish-status`,
+> `setup`), the machine-readable adoption task spec, and the vendored 0.1
+> specification, checksummed. Install with `npx skills add Cabuya/cabuya-skill`
+> or `git clone … && bash setup.sh` — both proven on a clean clone; the
+> transcript lives with the release. Remove it by deleting the clone and the
+> symlinks `setup.sh` printed; the only files it ever writes in *your* repo
+> are the two named in [`TRUST.md`](TRUST.md).
 
 ---
 
@@ -70,7 +74,7 @@ exactly what the pack touches, with a self-audit you can run.
 
 The four supported paths, with the reasoning behind each, are documented at
 **[cabuya.org/developers/skill](https://cabuya.org/developers/skill)**. The
-short version, once the pack ships:
+short version:
 
 ```bash
 git clone --depth 1 https://github.com/Cabuya/cabuya-skill \

@@ -215,5 +215,5 @@ fi
 
 say "Done."
 say ""
-say "Ask your agent \"what is Cabuya?\" — the router answers that one directly,"
-say "from the vendored specification, with no network."
+say "Ask your agent \"what is Cabuya?\" — the explain sub-skill answers it,"
+say "from the vendored specification, with citations and no network."
