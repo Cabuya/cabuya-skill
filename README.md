@@ -18,6 +18,36 @@ because the specification travels inside the pack rather than being fetched.
 
 ---
 
+## Quick start
+
+Two lines, and your agent runs the adoption:
+
+```bash
+npx skills add Cabuya/cabuya-skill
+```
+
+Then say **`/cabuya`** (in agents that intercept the slash: *"adopt Cabuya"*).
+The agent reads your repository, tells you what implementing the protocol
+means *here* — which files, which endpoints, roughly how much work — and then
+plans the adoption and runs it task by task, validating each. It asks who
+should plan before proposing anything: your own spec-driven methodology
+outranks anything the pack brings, DeepWorkPlan is offered and never
+required, and the one decision that is always yours is the PII gate.
+
+Not ready to adopt? Ask it questions first — *"what is Cabuya?"*, *"¿qué es
+Cabuya?"*, *"what would this take in our app?"* — and it answers from the
+vendored specification, with citations, offline, writing nothing.
+
+Prefer the vendored install (reviewable in a pull request, pinned):
+
+```bash
+git clone --depth 1 https://github.com/Cabuya/cabuya-skill \
+  .agents/skills/cabuya && rm -rf .agents/skills/cabuya/.git
+bash .agents/skills/cabuya/setup.sh   # links it into every agent it detects
+```
+
+The guided page for humans: **[cabuya.org/start](https://cabuya.org/start)**.
+
 ## Why it vendors the specification
 
 An agent that has to fetch a standard will invent one when the fetch fails, and

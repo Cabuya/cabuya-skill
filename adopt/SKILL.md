@@ -10,7 +10,7 @@ description: >
   implementar Cabuya desde cero", "get us started", or invokes the pack with
   no more specific intent.
 version: "0.1.0"
-documentation_url: https://cabuya.org/developers/skill
+documentation_url: https://cabuya.org/start
 user-invocable: true
 allowed-tools: Bash, Read, Grep, Glob, Edit, Write
 ---

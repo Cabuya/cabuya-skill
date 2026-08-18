@@ -36,6 +36,11 @@ with no network at all.
 
 ## Start here (first run)
 
+**The short version:** if the developer said "adopt Cabuya" — or anything
+ambiguous — go straight to [`adopt/SKILL.md`](adopt/SKILL.md). It runs the
+orientation below itself, asks who should plan, and hands off. The steps here
+are for entering through any other door.
+
 Nothing below requires an internet connection. That is deliberate: an agent
 that has to fetch a standard will invent one when the fetch fails, and it will
 invent it confidently.
