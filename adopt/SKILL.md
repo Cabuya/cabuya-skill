@@ -52,10 +52,10 @@ End the block with two doors:
 
 > Ask me anything about the protocol first, or say **go**.
 
-"Anything about the protocol" is answered from the vendored spec — start at
-[`../spec/PROTOCOL_SUMMARY.md`](../spec/PROTOCOL_SUMMARY.md) and cite the
-section you answer from. Never answer from memory of what a protocol like
-this probably says.
+"Anything about the protocol" routes to
+[`../explain/SKILL.md`](../explain/SKILL.md): grounded answers from the
+vendored spec, with citations. Never answer from memory of what a protocol
+like this probably says.
 
 ## Step 2 · Resume — never re-ask what is written
 

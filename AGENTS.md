@@ -27,6 +27,7 @@ SKILL.md              the router — routes and does nothing else
 TRUST.md              what it will and will not do, with a self-audit
 setup.sh              multi-agent installer; links, never copies
 adopt/                the front door — orient, ask who plans, hand off
+explain/              what/how/why, answered from the vendored spec, cited
 implement/            the adoption flow — the six phases and the PII gate
   mapping/            field crosswalk, place_kind, DIVIPOLA
   stacks/             four per-stack guides

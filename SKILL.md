@@ -87,12 +87,12 @@ procedure, and the procedures carry the guardrails.
 | Developer says… | Route to |
 |---|---|
 | "adopt Cabuya", "adopta el protocolo", "quiero implementar Cabuya desde cero", "get us started", "help me publish our data", — or the pack is invoked with no more specific intent | **Adopt** → [`adopt/SKILL.md`](adopt/SKILL.md) — the front door: it orients, explains what implementing means *here*, asks who plans the work, and hands off |
+| "what is Cabuya?", "qué es Cabuya", "explícame el protocolo", "why a protocol?", "what does L3 require?", "what would this take in our app?" | **Explain** → [`explain/SKILL.md`](explain/SKILL.md) — grounded answers from the vendored spec, with citations, plus the read-only preview of what adoption would mean here |
 | "implement Cabuya", "publica un feed", "expose our shelters", "get us to L2" | **Implement** → [`implement/SKILL.md`](implement/SKILL.md) |
 | "consume peers", "lee los feeds de las otras apps", "show other apps' collection points" | **Consume** → [`consume/SKILL.md`](consume/SKILL.md) |
 | "validate", "valida el feed", "is my feed conforming?", "why is my badge red?" | **Validate** → [`validate/SKILL.md`](validate/SKILL.md) |
 | "publish our level", "update the manifest", "abre el PR del registro", "we're shutting down" | **Publish-status** → [`publish-status/SKILL.md`](publish-status/SKILL.md) |
 | "set up", "doctor", "no me corre el validador", "install the toolchain" | **Setup** → [`setup/SKILL.md`](setup/SKILL.md) |
-| "what is Cabuya?", "explain the ladder", "what does L3 require?" | Answer from [`spec/PROTOCOL_SUMMARY.md`](spec/PROTOCOL_SUMMARY.md) — **do not route**; this is the one case the router answers directly, because it is the whole point |
 
 Both languages are first-class triggers. Colombian Spanish is the working
 language of most of the organizations this protocol exists for, and an agent

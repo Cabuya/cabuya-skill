@@ -32,7 +32,7 @@ PACK_DIR="$SCRIPT_DIR"
 # Sub-skills, in the order the router lists them. A directory with no SKILL.md
 # is skipped rather than linked: the pack is built in stages, and a symlink to
 # a skill that does not exist yet is worse than no symlink.
-SUBSKILLS="adopt implement consume validate publish-status setup"
+SUBSKILLS="adopt explain implement consume validate publish-status setup"
 
 DRY_RUN="no"
 HOST=""

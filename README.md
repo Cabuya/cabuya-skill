@@ -52,6 +52,7 @@ exactly what the pack touches, with a self-audit you can run.
 | `SKILL.md` | The router. Maps intent to a sub-skill and runs nothing itself |
 | `TRUST.md` | What this pack will and will not do on your machine |
 | `adopt/` | The front door: orient, ask who plans, hand off — resume without re-asking |
+| `explain/` | What, how and why — answered from the vendored spec, with citations |
 | `plan/` | The adoption as a machine-readable task spec; the ledger contract |
 | `implement/` | From your data model to a conforming feed — stacks, mapping, templates |
 | `consume/` | The six consumption rules as generated code with self-tests |
