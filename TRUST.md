@@ -56,6 +56,23 @@ a registry PR only when you asked it to publish your status, and it shows you
 the diff first. The word *never* here means the sub-skills contain no
 unprompted `gh pr create` path — see the self-audit.
 
+**It writes exactly two files of its own, and you can delete both.**
+
+1. `.cabuya/adoption.json` — the adoption ledger: the detected stack, who
+   plans the work, which steps are done, the one human PII decision, and the
+   last measured level with the digest of the report that measured it. Its
+   schema ([`plan/adoption.schema.json`](plan/adoption.schema.json)) is
+   closed: columns are recorded by *name* only, free text is capped, and
+   there is no field that could hold a personal name, phone, email or
+   document. Remove it: `rm -r .cabuya/` — nothing else references it.
+2. A plan under `.dwp/plans/PLAN_cabuya_adoption/` — **only with your
+   consent**, on the DeepWorkPlan path, and never regenerated over an
+   existing one. Remove it by deleting the directory.
+
+Neither file ever contains a contact value, a person's data, or a
+conformance level the validator did not measure — the ledger schema makes
+the last two unrepresentable, and `bin/check-ledger.mjs` proves it offline.
+
 **It never sends your data anywhere.** Not to Cabuya, not to a telemetry
 endpoint, not to an LLM provider beyond the agent session you are already in.
 There is nothing in this pack that posts your schema, your rows, or your repo

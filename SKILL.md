@@ -86,6 +86,7 @@ procedure, and the procedures carry the guardrails.
 
 | Developer says… | Route to |
 |---|---|
+| "adopt Cabuya", "adopta el protocolo", "quiero implementar Cabuya desde cero", "get us started", "help me publish our data", — or the pack is invoked with no more specific intent | **Adopt** → [`adopt/SKILL.md`](adopt/SKILL.md) — the front door: it orients, explains what implementing means *here*, asks who plans the work, and hands off |
 | "implement Cabuya", "publica un feed", "expose our shelters", "get us to L2" | **Implement** → [`implement/SKILL.md`](implement/SKILL.md) |
 | "consume peers", "lee los feeds de las otras apps", "show other apps' collection points" | **Consume** → [`consume/SKILL.md`](consume/SKILL.md) |
 | "validate", "valida el feed", "is my feed conforming?", "why is my badge red?" | **Validate** → [`validate/SKILL.md`](validate/SKILL.md) |
@@ -97,9 +98,9 @@ Both languages are first-class triggers. Colombian Spanish is the working
 language of most of the organizations this protocol exists for, and an agent
 that only routes on English has excluded them.
 
-If the intent is ambiguous, ask which of the five the developer means rather
-than guessing — the sub-skills write files, and the wrong one writes the wrong
-files.
+If the intent is ambiguous, route to **Adopt** — orientation is the correct
+answer to ambiguity, it writes nothing, and it ends by asking. The other
+sub-skills write files, and the wrong one writes the wrong files.
 
 ## Install
 

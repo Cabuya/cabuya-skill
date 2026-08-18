@@ -1,0 +1,38 @@
+{
+  "contract": "1.0",
+  "comment": "The spec-driven methodologies the pack can recognize from a repository's own files. Detection PROPOSES — the human confirms; a marker is evidence, never a decision. This file is the only place any methodology is named: adding one is a JSON entry, not a code change, and an entry needs only what can be verified from the adopter's working tree. A methodology absent from this list is still a fully supported path — the adopter answers three questions and the pack follows their instructions.",
+  "methodologies": [
+    {
+      "id": "deepworkplan",
+      "name": "DeepWorkPlan",
+      "markers": [".agents/skills/deepworkplan", ".claude/skills/deepworkplan", ".dwp"],
+      "entry_command": "/dwp-execute cabuya_adoption",
+      "artifacts_path": ".dwp/plans/",
+      "notes": "The pack renders the adoption directly into its plan anatomy; this entry exists so an installed DWP is detected the same way as any other methodology."
+    },
+    {
+      "id": "github-spec-kit",
+      "name": "GitHub Spec Kit",
+      "markers": [".specify"],
+      "entry_command": "/speckit.specify",
+      "artifacts_path": ".specify/",
+      "notes": "Confirm the command with the adopter — Spec Kit's command surface has changed between releases."
+    },
+    {
+      "id": "kiro-specs",
+      "name": "Kiro specs",
+      "markers": [".kiro/specs", ".kiro"],
+      "entry_command": "(in Kiro) start a new spec session",
+      "artifacts_path": ".kiro/specs/",
+      "notes": "IDE-driven rather than a slash command; hand the bundle as the spec session's input."
+    },
+    {
+      "id": "bmad-method",
+      "name": "BMAD Method",
+      "markers": [".bmad-core", "bmad"],
+      "entry_command": "(ask the adopter which BMAD agent starts a plan here)",
+      "artifacts_path": ".bmad-core/",
+      "notes": "Team installs vary; the marker proposes, the adopter names the entry."
+    }
+  ]
+}
