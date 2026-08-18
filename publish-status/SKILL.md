@@ -8,7 +8,7 @@ description: >
   "publish our level", "update the manifest", "abre el PR del registro", or
   "we're shutting down".
 version: "0.1.0"
-documentation_url: https://cabuya.org/developers/registry
+documentation_url: https://cabuya.org/registry
 user-invocable: true
 allowed-tools: Bash, Read, Grep, Glob, Edit, Write
 ---

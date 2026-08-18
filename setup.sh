@@ -165,7 +165,7 @@ link_agent() {
 while [ $# -gt 0 ]; do
   case "$1" in
     --host)
-      [ $# -ge 2 ] && [ -n "${2:-}" ] || die "Missing value for --host"
+      { [ $# -ge 2 ] && [ -n "${2:-}" ]; } || die "Missing value for --host"
       HOST="$2"; shift 2 ;;
     --host=*) HOST="${1#--host=}"; shift ;;
     --dry-run) DRY_RUN="yes"; shift ;;
