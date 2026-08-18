@@ -129,25 +129,14 @@ Then name their entry command and stop planning.
 
 ## Step 5 · The agent's own plan mode
 
-Nobody has to install a planning framework to publish a JSON file. Say the
-one honest sentence about the difference — *the decisions will survive in the
-ledger; the task detail lives in this session* — then:
-
-1. Enter your planning mode and **write nothing to the repository while
-   planning**.
-2. Build the plan **from `plan/tasks.json`** — the ordered tasks, each with
-   its goal, acceptance criteria and validation command, instantiated from
-   the stack guide. You are adopting a plan, not inventing one.
-3. Present it for approval the way your host does, then execute one task at a
-   time: do the work, run the task's validation, record the step in
-   `.cabuya/adoption.json`, move on.
-4. **Stop at `pii_gate`** and ask the human. The ledger schema accepts only
-   `decided_by: "human"` — there is nothing an agent could honestly write.
-5. On any validator PII finding, halt and ask. Never edit the deny-list.
-
-The upgrade stays open: installing DeepWorkPlan later renders the remaining
-tasks as a plan with the completed steps already marked, because the ledger —
-not the session — is where the progress lives.
+Nobody has to install a planning framework to publish a JSON file. Follow
+[`plan-mode.md`](plan-mode.md): enter your own planning mode over the same
+task sequence, write nothing while planning, execute one task at a time
+recording each in the ledger, and stop at `pii_gate` for the human. It
+carries the one honest sentence about the difference, and the upgrade path —
+installing DeepWorkPlan later renders the remaining tasks with the completed
+ones already marked, because the ledger, not the session, is where the
+progress lives.
 
 ## Every path ends the same way
 

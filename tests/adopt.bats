@@ -72,8 +72,9 @@ detect() {
   grep -q "/dwp-execute cabuya_adoption" "$ADOPT"
 }
 
-@test "plan mode states its honest cost in one sentence" {
-  says "$ADOPT" "the decisions will survive in the ledger; the task detail lives in this session"
+@test "the declined path routes to plan-mode.md, which carries the honest cost" {
+  grep -q "plan-mode.md" "$ADOPT"
+  says "$REPO/adopt/plan-mode.md" "the decisions will survive in the ledger; the task detail lives in this session"
 }
 
 @test "every path ends at the validator" {
