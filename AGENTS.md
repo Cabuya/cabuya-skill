@@ -44,7 +44,8 @@ shared/               notes several sub-skills read
   crawl-policy.md     the rule that holds even when asked
   validator.md        resolution order, exit codes, the report shape
   spec-paths.md       vendored vs authored, and the resolution order
-bin/                  run-validator.sh, degraded-check.mjs
+bin/                  run-validator.sh, degraded-check.mjs,
+                        check-ledger.mjs, render-dwp.mjs
 spec/                 VENDORED — never hand-edited
 examples/             VENDORED — the five teaching examples
 scripts/              sync, checksums, frontmatter validation

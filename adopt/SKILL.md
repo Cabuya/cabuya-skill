@@ -108,10 +108,10 @@ Then name their entry command and stop planning.
 
 `detect-planning.sh` already answered `dwp_installed`.
 
-- **Installed** → say so, render the adoption as a DeepWorkPlan
-  (`.dwp/plans/PLAN_cabuya_adoption/`, from `plan/tasks.json`, instantiated
-  for the detected stack), and hand off naming the exact command:
-  `/dwp-execute cabuya_adoption`.
+- **Installed** → say so, render the adoption as a DeepWorkPlan following
+  [`render-dwp.md`](render-dwp.md) (`bin/render-dwp.mjs` — deterministic,
+  refuses to overwrite, refuses unfilled placeholders), and hand off naming
+  the exact command: `/dwp-execute cabuya_adoption`.
 - **Not installed** → one line, one offer, once:
 
   > The work comes out better with DeepWorkPlan: the plan lands on disk as
