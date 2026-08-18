@@ -129,3 +129,24 @@ render() {
   run render --stack-guide implement/stacks/does-not-exist.md
   [ "$status" -eq 3 ]
 }
+
+@test "a ledger's completed steps arrive pre-marked — the ledger is the transfer" {
+  # plan-mode.md promises the upgrade path; the acceptance run found the
+  # renderer ignored the ledger. Now a repo that walked three steps in plan
+  # mode renders with those three checked and the rest open.
+  mkdir -p "$FIXTURE/.cabuya"
+  cat > "$FIXTURE/.cabuya/adoption.json" <<'JSON'
+{ "contract": "1.0", "created_at": "2026-08-18T10:00:00Z",
+  "updated_at": "2026-08-18T10:20:00Z",
+  "steps": [
+    { "id": "read_and_detect", "status": "done", "completed_at": "2026-08-18T10:05:00Z" },
+    { "id": "map", "status": "done", "completed_at": "2026-08-18T10:15:00Z" },
+    { "id": "pii_gate", "status": "done", "completed_at": "2026-08-18T10:20:00Z" }
+  ] }
+JSON
+  render
+  [ "$(grep -c '^- \[x\]' "$PLAN/README.md")" -eq 3 ]
+  grep -q '\[x\] Task 3: The PII gate' "$PLAN/README.md"
+  grep -q '^- \[ \] Task 4' "$PLAN/README.md"
+  grep -q 'done (from the ledger)' "$PLAN/PROGRESS.md"
+}

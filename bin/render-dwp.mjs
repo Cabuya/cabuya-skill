@@ -93,6 +93,31 @@ try {
 const tasks = spec.tasks.filter((t) => !t.optional || args.includeL3);
 const skipped = spec.tasks.filter((t) => t.optional && !args.includeL3);
 
+/*
+ * The ledger is the transfer. A repository that walked part of the adoption in
+ * plan mode (or under a foreign methodology) has its completed steps in
+ * .cabuya/adoption.json — so a later render arrives with those tasks already
+ * checked, instead of asking anyone to redo or hand-tick them. Found by the
+ * acceptance run: plan-mode.md promised this and the renderer did not do it.
+ */
+const ledgerPath = join(repoRootOf(), '.cabuya', 'adoption.json');
+function repoRootOf() {
+  return args.repo;
+}
+let completed = new Set();
+if (existsSync(ledgerPath)) {
+  try {
+    const ledger = JSON.parse(readFileSync(ledgerPath, 'utf8'));
+    completed = new Set(
+      (ledger.steps ?? [])
+        .filter((step) => step.status === 'done')
+        .map((step) => step.id)
+    );
+  } catch {
+    /* an unreadable ledger marks nothing — never guess at completion */
+  }
+}
+
 // --- substitution ------------------------------------------------------------
 
 const values = {
@@ -142,7 +167,11 @@ writeFileSync(join(planDir, 'analysis_results', '.gitkeep'), '');
 const slug = (t) => `${tasks.indexOf(t) + 1}.task_${t.id}.md`;
 
 const taskList = tasks
-  .map((t) => `- [ ] Task ${tasks.indexOf(t) + 1}: ${t.title}\n      See: [${slug(t)}](./${slug(t)})`)
+  .map((t) => {
+    const box = completed.has(t.id) ? '[x]' : '[ ]';
+    const done = completed.has(t.id) ? ' — completed before this render (see the ledger)' : '';
+    return `- ${box} Task ${tasks.indexOf(t) + 1}: ${t.title}${done}\n      See: [${slug(t)}](./${slug(t)})`;
+  })
   .join('\n\n');
 
 const followupNote = skipped.length
@@ -214,12 +243,20 @@ writeFileSync(
   fill(TPL('PROGRESS.md'), {
     progress_rows:
       '| Task | Status | Summary |\n|---|---|---|\n' +
-      tasks.map((t) => `| ${tasks.indexOf(t) + 1}. ${t.title} | pending | |`).join('\n'),
+      tasks
+        .map(
+          (t) =>
+            `| ${tasks.indexOf(t) + 1}. ${t.title} | ${
+              completed.has(t.id) ? 'done (from the ledger)' : 'pending'
+            } | |`
+        )
+        .join('\n'),
   })
 );
 
 console.log(
   `rendered ${tasks.length} tasks into ${planDir}\n` +
+    (completed.size ? `already completed per the ledger: ${[...completed].join(', ')}\n` : '') +
     (skipped.length ? `skipped (follow-up): ${skipped.map((t) => t.id).join(', ')}\n` : '') +
     `next: /dwp-execute cabuya_adoption`
 );
