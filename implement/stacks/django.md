@@ -115,8 +115,9 @@ class Command(BaseCommand):
             default=None,
         )
         feed = {
-            "protocol": {"name": "cabuya", "spec_version": "0.1.0"},
+            "version": "0.1.0",
             "publisher_id": "example-app",
+            "license": "CC-BY-4.0",
             "last_updated": last_updated.isoformat() if last_updated else None,
             "ttl": 86400,
             "data": {"places": records},

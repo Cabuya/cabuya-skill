@@ -297,3 +297,25 @@ guides() {
     }
   done
 }
+
+@test "every serializer envelope is the feed's shape, not the manifest's" {
+  # Found by the E2E acceptance run: a guide that shows protocol:{...} in the
+  # feed envelope teaches the manifest's shape, and the degraded checker then
+  # validates the output against the wrong schema. The feed envelope carries
+  # version + license (required by place-feed.schema.json); protocol{} is the
+  # manifest's discriminator and must not appear in a feed serializer.
+  while IFS= read -r guide; do
+    offenders="$(code_only "$guide" | grep -nE '"?protocol"?[[:space:]]*[:=]' || true)"
+    [ -z "$offenders" ] || {
+      echo "$(basename "$guide") puts the manifest discriminator in a feed envelope:"
+      echo "$offenders"
+      return 1
+    }
+  done < <(guides)
+  for guide in django rails express-node astro-static firebase-firestore; do
+    code_only "$STACKS/$guide.md" | grep -qE '"?license"?[[:space:]]*[:=]' || {
+      echo "$guide.md's envelope has no license — the schema requires it"
+      return 1
+    }
+  done
+}

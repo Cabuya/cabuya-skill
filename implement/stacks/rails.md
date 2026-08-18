@@ -93,8 +93,9 @@ namespace :cabuya do
     last_updated = rows.filter_map(&:confirmado_en).max
 
     feed = {
-      protocol: { name: "cabuya", spec_version: "0.1.0" },
+      version: "0.1.0",
       publisher_id: "example-app",
+      license: "CC-BY-4.0",
       last_updated: last_updated&.iso8601,
       ttl: 86_400,
       data: { places: records },

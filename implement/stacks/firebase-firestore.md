@@ -125,8 +125,9 @@ const highWater = snap.docs
   .at(-1);
 
 const feed = {
-  protocol: { name: "cabuya", spec_version: "0.1.0" },
+  version: "0.1.0",
   publisher_id: "example-app",
+  license: "CC-BY-4.0",
   last_updated: highWater ? highWater.toISOString() : null,
   ttl: 86400,
   data: { places },
