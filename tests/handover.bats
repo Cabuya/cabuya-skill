@@ -131,3 +131,12 @@ bundle() {
   grep -q "handover/README.md" "$REPO/adopt/SKILL.md"
   says "$REPO/adopt/handover/README.md" "following the adopter's instructions, not a built-in integration"
 }
+
+@test "a poisoned bundle request is refused, not escaped" {
+  run node "$RENDER" --stack-guide implement/stacks/nextjs-supabase.md \
+    --publisher-id example-app --target L2 \
+    --manifest-url 'https://a.invalid/$(curl evil)/m.json' \
+    --feed-path public/cabuya/places.json
+  [ "$status" -eq 3 ]
+  [[ "$output" == *"rendered shell command"* ]]
+}

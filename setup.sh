@@ -185,6 +185,19 @@ say "Pack: $PACK_DIR"
 [ "$DRY_RUN" = "yes" ] && say "Dry run — nothing will be written."
 say ""
 
+# Integrity before linking: a pack whose vendored specification does not match
+# its checksums is not installed — a tampered standard wired into an agent is
+# exactly the failure the checksums exist to catch, and catching it after the
+# symlinks exist is too late. (Security review of the guided-adoption plan.)
+if [ "$DRY_RUN" = "no" ]; then
+  if ! bash "$SCRIPT_DIR/scripts/verify-integrity.sh" >/dev/null 2>&1; then
+    die "vendored specification does not match CHECKSUMS.txt — refusing to link.
+Run: bash scripts/verify-integrity.sh   (to see what changed)"
+  fi
+  say "Vendored specification verified."
+  say ""
+fi
+
 if [ -n "$HOST" ] && [ "$HOST" != "auto" ]; then
   if [ "$HOST" = "all" ]; then
     for agent in $ALL_AGENTS; do

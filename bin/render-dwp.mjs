@@ -57,6 +57,35 @@ if (missing.length > 0) {
   process.exit(3);
 }
 
+
+/*
+ * Shape-check the values that land inside rendered shell commands.
+ *
+ * The validation blocks this script writes are commands an agent will later
+ * EXECUTE in the adopter's repository. Every substituted value comes from the
+ * adopter's own answers — but a poisoned bundle request (a URL carrying
+ * `;`/backticks, a path with `$( )`) would turn a rendered command into an
+ * injection an agent runs weeks later. Found in the plan's security review;
+ * refuse at render time, where the fix is a better answer, not a shell escape.
+ */
+const SAFE = {
+  'manifest-url': /^https?:\/\/[A-Za-z0-9._~:/?#@!$&'()*+,;=%[\]-]+$/,
+  'feed-path': /^[A-Za-z0-9._/-]+$/,
+  'publisher-id': /^[a-z0-9][a-z0-9-]{1,62}[a-z0-9]$/,
+  'stack-guide': /^[A-Za-z0-9._/-]+$/,
+};
+const SHELL_META = /[;|&`$<>\\\s]/;
+for (const [key, pattern] of Object.entries(SAFE)) {
+  if (args[key] === undefined) continue;
+  if (!pattern.test(args[key]) || SHELL_META.test(args[key])) {
+    console.error(
+      `--${key} contains characters that cannot travel into a rendered shell command: ${args[key]}\n` +
+        'This value is substituted into a validation command an agent will run.'
+    );
+    process.exit(3);
+  }
+}
+
 if (!['L1', 'L2', 'L3'].includes(args.target)) {
   console.error(`--target must be L1, L2 or L3, got: ${args.target}`);
   process.exit(3);

@@ -135,3 +135,14 @@ teardown() {
   [ "$status" -ne 0 ]
   [[ "$output" == *"No SKILL.md"* ]]
 }
+
+@test "a tampered vendored specification refuses to link" {
+  # Integrity runs BEFORE symlinks exist — after is too late.
+  clone="$BATS_TEST_TMPDIR/tampered"
+  cp -r "$REPO_ROOT" "$clone"
+  printf 'drift\n' >> "$clone/spec/EXCLUSIONS.md"
+  run env HOME="$BATS_TEST_TMPDIR/home" bash "$clone/setup.sh" --host claude
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"refusing to link"* ]]
+  [ ! -e "$BATS_TEST_TMPDIR/home/.claude/skills/cabuya" ]
+}

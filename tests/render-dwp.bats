@@ -150,3 +150,16 @@ JSON
   grep -q '^- \[ \] Task 4' "$PLAN/README.md"
   grep -q 'done (from the ledger)' "$PLAN/PROGRESS.md"
 }
+
+@test "a value carrying shell metacharacters is refused at render time" {
+  # The rendered Validation blocks are commands an agent later executes; a
+  # poisoned argument must die here, not detonate there.
+  run node "$REPO/bin/render-dwp.mjs" --repo "$FIXTURE" \
+    --stack-guide implement/stacks/nextjs-supabase.md \
+    --publisher-id example-app --target L2 \
+    --manifest-url 'https://a.invalid/m.json;rm -rf /' \
+    --feed-path public/cabuya/places.json
+  [ "$status" -eq 3 ]
+  [[ "$output" == *"rendered shell command"* ]]
+  [ ! -d "$PLAN" ]
+}

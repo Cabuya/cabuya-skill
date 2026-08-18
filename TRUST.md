@@ -73,6 +73,13 @@ Neither file ever contains a contact value, a person's data, or a
 conformance level the validator did not measure — the ledger schema makes
 the last two unrepresentable, and `bin/check-ledger.mjs` proves it offline.
 
+Two guards you can check by reading the code: `setup.sh` verifies the
+vendored specification against its checksums **before** creating any
+symlink, and refuses a pack that does not match; and the two renderers
+refuse any value that would put shell metacharacters into a rendered
+validation command — the commands a generated plan carries are commands an
+agent will later run, so a poisoned value dies at render time instead.
+
 **It never sends your data anywhere.** Not to Cabuya, not to a telemetry
 endpoint, not to an LLM provider beyond the agent session you are already in.
 There is nothing in this pack that posts your schema, your rows, or your repo
