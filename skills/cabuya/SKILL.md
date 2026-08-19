@@ -30,6 +30,11 @@ feed, a read API, a write API, and MCP. Conformance is measured by a published
 validator and never self-declared — which is why this pack can tell you your
 level, and cannot award it to you.
 
+What the pack itself teaches, stated honestly: **the static feed end-to-end**
+— the floor all four transports share — plus read-API guidance as a template
+([`implement/templates/serializer-read-api.md`](implement/templates/serializer-read-api.md));
+the write API and MCP are specified by the protocol but not yet taught here.
+
 Apache-2.0. Source of truth: **<https://cabuya.org/developers>**. The
 specification text you need is vendored in [`spec/`](spec/) — this pack works
 with no network at all.

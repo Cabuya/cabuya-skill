@@ -202,4 +202,6 @@ The findings this stack characteristically produces:
 Left behind: the management command, the manifest, the urlpattern (or web
 server block), and [`../templates/CABUYA.md`](../templates/CABUYA.md) filled
 in. Next step: `publish-status` to set `conformance_target` and open the
-registry entry — with the human's yes.
+registry entry — with the human's yes. Stepping up to a read API later is the
+same document from a route —
+[`../templates/serializer-read-api.md`](../templates/serializer-read-api.md).

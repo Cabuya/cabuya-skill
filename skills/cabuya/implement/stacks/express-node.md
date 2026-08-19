@@ -175,4 +175,6 @@ registered **before** it, and then verified by fetching: a 200 with
 Left behind: the export script, the two static mounts, the manifest,
 `robots.txt` if it was missing, and
 [`../templates/CABUYA.md`](../templates/CABUYA.md) filled in. Next step:
-`publish-status` — with the human's yes on the registry PR.
+`publish-status` — with the human's yes on the registry PR. Stepping up to a
+read API later is the same document from a route —
+[`../templates/serializer-read-api.md`](../templates/serializer-read-api.md).

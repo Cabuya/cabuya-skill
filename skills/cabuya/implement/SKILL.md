@@ -138,7 +138,13 @@ yours are in the deny-list; the operative consequences here are:
 ## Phase 3 · Serialize
 
 Now you write code. Adapt from [`templates/`](templates/) to the stack.
-Envelope first, records second.
+Envelope first, records second. Prefer build-time
+([`templates/serializer-build-time.md`](templates/serializer-build-time.md));
+a route handler ([`templates/serializer-route-handler.md`](templates/serializer-route-handler.md))
+or a cron ([`templates/serializer-cron.md`](templates/serializer-cron.md))
+when freshness demands it. Stepping up toward L3 later, the read API is the
+same document from a route —
+[`templates/serializer-read-api.md`](templates/serializer-read-api.md).
 
 **Never invent data.** A field the app does not have is either omitted (if it
 is Extended) or the record is reported as non-conforming (if it is Core).

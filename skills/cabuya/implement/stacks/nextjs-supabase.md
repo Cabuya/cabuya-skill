@@ -230,5 +230,7 @@ middleware matcher edit, and a filled-in `CABUYA.md`.
 
 If the app has a read API already, L3 is close: it needs byte-compatible
 records with the feed and one peer feed consumed under the six consumption
-rules. `consume` handles the second half. Report the level the validator
+rules — the step-up path is
+[`../templates/serializer-read-api.md`](../templates/serializer-read-api.md).
+`consume` handles the second half. Report the level the validator
 measured.
