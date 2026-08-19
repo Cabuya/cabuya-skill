@@ -1,0 +1,37 @@
+{
+  "_provenance": {
+    "source": "Cabuya/cabuya.org — registry/publishers/*.json (git working copy)",
+    "retrieved_at": "2026-08-19",
+    "note": "Org-level data only: ids, URLs, entity domains, review status. Measured conformance state lives in the live registry and is never in this snapshot — an offline agent reports the snapshot's age and says 'conformance unmeasured', never a level. Regenerate per CONTRIBUTING.md (The registry snapshot)."
+  },
+  "publishers": [
+    {
+      "publisher_id": "corag",
+      "canonical_url": "https://ayuda.corag.app",
+      "entity_domains": ["place"],
+      "status": "proposed",
+      "added": "2026-08-16"
+    },
+    {
+      "publisher_id": "pereira-ayuda",
+      "canonical_url": "https://pereiraayuda.com",
+      "entity_domains": ["place"],
+      "status": "proposed",
+      "added": "2026-08-16"
+    },
+    {
+      "publisher_id": "pereira-responde",
+      "canonical_url": "https://pereiraresponde.co",
+      "entity_domains": ["place"],
+      "status": "proposed",
+      "added": "2026-08-16"
+    },
+    {
+      "publisher_id": "reporte-co",
+      "canonical_url": "https://co.crafter.run",
+      "entity_domains": ["place"],
+      "status": "proposed",
+      "added": "2026-08-16"
+    }
+  ]
+}

@@ -27,10 +27,12 @@ retrofitting them means rewriting it.
 
 ### 1. Resolve the registry
 
-The pack carries a snapshot so this works offline. Refresh it if there is
-network; if there is not, **say which snapshot you are using and how old it
-is** — a registry from six months ago may list a publisher who has since wound
-down.
+The pack carries a snapshot — [`registry-snapshot.json`](registry-snapshot.json),
+provenance-stamped — so this works offline. Refresh it if there is network; if
+there is not, **say which snapshot you are using and how old it is** (its
+`_provenance.retrieved_at`) — a registry from six months ago may list a
+publisher who has since wound down. The snapshot carries review status only,
+never measured conformance: offline, no publisher has a level.
 
 ### 2. Filter — before fetching anything
 

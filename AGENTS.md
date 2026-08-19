@@ -37,7 +37,7 @@ adopt/                the front door — orient, ask who plans, hand off
 explain/              what/how/why, answered from the vendored spec, cited
 implement/            the adoption flow — the six phases and the PII gate
   mapping/            field crosswalk, place_kind, DIVIPOLA
-  stacks/             four per-stack guides
+  stacks/             nine per-stack guides + the contributor template
   templates/          manifest, serializers, the adopter's CABUYA.md
 consume/              reading the network — the six MUSTs, with self-tests
 validate/             run the validator, read the report

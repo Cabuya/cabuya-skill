@@ -38,11 +38,22 @@ are the ones this repository wants.
 Everything CI runs, runnable locally:
 
 ```bash
-python3 scripts/validate-frontmatter.py   # frontmatter conventions on every SKILL.md
-bash scripts/verify-integrity.sh          # the vendored spec matches upstream
-shellcheck scripts/*.sh setup.sh          # shell hygiene (skips what does not exist yet)
-bats tests/                               # the shell surface
+python3 skills/cabuya/scripts/validate-frontmatter.py   # frontmatter conventions on every SKILL.md
+bash skills/cabuya/scripts/verify-integrity.sh          # the vendored spec matches upstream
+shellcheck setup.sh skills/cabuya/scripts/*.sh          # shell hygiene (skips what does not exist yet)
+bats tests/                                             # the shell surface
 ```
+
+### The registry snapshot
+
+`skills/cabuya/consume/registry-snapshot.json` is the offline copy of the
+publisher list that `consume` starts from. It is **org-level data only** —
+publisher ids, canonical URLs, entity domains, status — never contact values,
+and never measured conformance state (that lives in the live registry and is
+deliberately absent). Regenerate it from the website repository's
+`registry/publishers/*.json` when publishers change: copy the org-level
+fields, update `_provenance.retrieved_at`, and let
+`tests/registry-snapshot.bats` check the rest.
 
 `shellcheck` and `bats` come from your package manager (`apt install shellcheck
 bats`, `brew install shellcheck bats-core`). `validate-frontmatter.py` needs

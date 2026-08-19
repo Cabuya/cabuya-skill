@@ -6,6 +6,38 @@ pack's supported specification versions declared in the router's frontmatter.
 
 ## [Unreleased]
 
+### Added
+
+- The two premises open `spec/PROTOCOL_SUMMARY.md` — many overlapping apps
+  will exist and unification will not happen; the data is sensitive, so the
+  shared layer excludes person-level data by design.
+- Five newcomer questions in `explain/QUESTIONS.md`: the database question
+  (crosswalk, never migration), file-vs-endpoint (§3.2 equivalence), the
+  consumer display pattern, v0.2 honesty (RFC 0002 is a draft, not shipped),
+  and data organization.
+- `implement/mapping/reference-model.md` — the non-normative reference data
+  model for greenfield or adaptable apps, with the crosswalk fork: existing
+  app → crosswalk; new app → reference model → near-zero crosswalk.
+- The canonical record-display pattern with location in `consume/` —
+  `{name} — by {publisher} · {municipality_text}, {neighborhood_text}` — and
+  location-mapping honesty rules in the crosswalk.
+- `consume/registry-snapshot.json` — the offline publisher snapshot the
+  consume flow always promised; org-level only, provenance-stamped, covered
+  by `tests/registry-snapshot.bats`.
+
+### Fixed
+
+- Contributor commands in the README, CONTRIBUTING and the PR template run
+  again from the repo root (they predated the `skills/cabuya/` move).
+- The repository map states the `skills/cabuya/` convention; the `examples/`
+  and `addons/` rows describe what is actually there.
+- `setup.sh --help` lists all seven sub-skill links, including `cabuya-adopt`
+  and `cabuya-explain`.
+- The Next.js feed path in `shared/stack-detection.md` matches the stack
+  guide (`app/cabuya/places.json/route.ts`).
+- The stale "0.1, a draft" status in `explain/` corrected to 0.1, normative —
+  matching the vendored summary's own status line.
+
 ## [0.1.0] — 2026-08-18
 
 **Specification versions supported by this release: 0.1** (vendored copy
@@ -102,7 +134,8 @@ clone before this entry was written.
   specification. Reports honestly that nothing is vendored yet rather than
   passing silently.
 
-**All five sub-skills are in.** An agent can take an app from a database to a
+**All seven sub-skills are in** (adopt, explain, implement, consume,
+validate, publish-status, setup). An agent can take an app from a database to a
 measured feed, read its peers' feeds under the six consumption rules, publish
 a level it has actually earned, and wind down without stranding anybody. The
 acceptance test exists and its kit is verified in CI.

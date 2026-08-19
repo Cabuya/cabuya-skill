@@ -4,8 +4,8 @@
 
 ## Checks
 
-- [ ] `python3 scripts/validate-frontmatter.py` passes
-- [ ] `bash scripts/verify-integrity.sh` passes
+- [ ] `python3 skills/cabuya/scripts/validate-frontmatter.py` passes
+- [ ] `bash skills/cabuya/scripts/verify-integrity.sh` passes
 - [ ] `shellcheck` clean on every script this touches
 - [ ] `bats tests/` passes
 - [ ] Commits signed off (`git commit -s`)

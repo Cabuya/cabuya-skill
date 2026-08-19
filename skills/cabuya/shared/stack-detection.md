@@ -71,7 +71,7 @@ from the root and does not route it through middleware matchers by default —
 but **check `middleware.ts`**: a broad `matcher` can intercept it, and a
 catch-all `[...slug]` route can shadow it.
 
-**Feed:** a route handler, `app/api/cabuya/places/route.ts`, with
+**Feed:** a route handler, `app/cabuya/places.json/route.ts`, with
 `export const dynamic = 'force-static'` or an explicit `revalidate`. Set
 `last_updated` from the data's own maximum `updated_at`, or from build time —
 never `new Date()` at request time.

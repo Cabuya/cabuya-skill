@@ -80,6 +80,10 @@ exactly what the pack touches, with a self-audit you can run.
 
 ## Repository map
 
+Everything an installed agent reads lives under `skills/cabuya/` — the paths
+below are relative to it. The repository root holds only the contributor
+surface: `setup.sh`, `tests/`, `docs/`, CI, and this file.
+
 | Path | What is in it |
 |---|---|
 | `SKILL.md` | The router. Maps intent to a sub-skill and runs nothing itself |
@@ -94,10 +98,10 @@ exactly what the pack touches, with a self-audit you can run.
 | `setup/` | The doctor: toolchain, validator, paths, network |
 | `shared/` | Notes several sub-skills read: the deny-list, crawl policy, stack detection |
 | `spec/` | The vendored protocol contracts. **Never hand-edited** — see below |
-| `examples/` | Worked examples and per-stack serializer sketches |
-| `addons/` | Opt-in extras. Declining one leaves a fully working pack |
-| `scripts/` | Repository tooling — frontmatter validation, integrity verification |
-| `tests/` | bats tests for the shell surface |
+| `examples/` | The five vendored teaching examples; serializer sketches live in `implement/templates/` and `implement/stacks/` |
+| `addons/` | Opt-in extras — empty by design at 0.1.0. Declining one leaves a fully working pack |
+| `scripts/` | Pack tooling — frontmatter validation, integrity verification, spec sync |
+| `tests/` *(root)* | bats tests for the shell surface |
 
 ## Installing it
 
@@ -111,7 +115,10 @@ bash vendor/cabuya-skill/setup.sh
 ```
 
 Vendored into your own repository is the recommended path: reviewable in a pull
-request, pinned to a commit, and offline.
+request, pinned to a commit, and offline. The in-repo convention is
+`.agents/skills/cabuya/` — the path the acceptance test uses — while
+`setup.sh` links the pack into each agent's **per-user** skills directory
+(`~/.claude/skills`, `~/.cursor/skills`, …). Two install modes, one pack.
 
 Cloned somewhere else? `bash setup.sh` links the pack and each sub-skill into
 every agent it finds on the machine — `--host claude` to pick one, `--dry-run`
@@ -151,8 +158,8 @@ with `git commit -s`, run the checks below before opening a pull request, and
 never hand-edit anything under `spec/`.
 
 ```bash
-python3 scripts/validate-frontmatter.py   # SKILL.md frontmatter conventions
-bash scripts/verify-integrity.sh          # the vendored spec matches upstream
-shellcheck scripts/*.sh                   # shell hygiene
-bats tests/                               # the shell surface
+python3 skills/cabuya/scripts/validate-frontmatter.py   # SKILL.md frontmatter conventions
+bash skills/cabuya/scripts/verify-integrity.sh          # the vendored spec matches upstream
+shellcheck setup.sh skills/cabuya/scripts/*.sh          # shell hygiene
+bats tests/                                             # the shell surface
 ```

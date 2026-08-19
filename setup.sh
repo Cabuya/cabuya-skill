@@ -61,6 +61,8 @@ Options:
 
 What it creates, per agent:
   <skills dir>/cabuya                  -> the pack (the router)
+  <skills dir>/cabuya-adopt            -> adopt/
+  <skills dir>/cabuya-explain          -> explain/
   <skills dir>/cabuya-implement        -> implement/
   <skills dir>/cabuya-consume          -> consume/
   <skills dir>/cabuya-validate         -> validate/
