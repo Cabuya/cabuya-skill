@@ -24,6 +24,13 @@ the record itself. Not on a details page, not behind a tooltip. When
 `attribution_required` is true, the display is mandatory rather than
 preferred.
 
+Attribution travels with **place**: the canonical shape is
+`{name} — by {publisher} · {municipality_text}, {neighborhood_text}`, from
+the record's own geography fields — a record shown in another city still says
+where it is and whose it is. And the record's action button goes to
+`public_url` — the origin app — never to a contact UI the consumer
+synthesizes.
+
 **Self-test:** an assertion in the rendering component's test that the
 publisher name appears in the rendered output for a foreign fixture. Written
 so a grep for `source_id` in the component finds it.

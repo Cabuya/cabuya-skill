@@ -86,11 +86,12 @@ protocol, not marketing. One human decision (the PII gate) is mandatory.
 
 ## 10. How stable is this? · ¿Qué tan estable es esto?
 
-The specification is **0.1, a draft**. Say that whenever stability is asked.
-SemVer, two supported MAJORs at most, 180 days of producer runway on a MAJOR
-bump, and unknown members never fail validation.
+The specification is **0.1, normative** — the first published version, early
+but no longer a draft. Say the version whenever stability is asked. SemVer,
+two supported MAJORs at most, 180 days of producer runway on a MAJOR bump,
+and unknown members never fail validation.
 
-**Sources:** `spec/VERSION` · `spec/PROTOCOL_SUMMARY.md` (§8).
+**Sources:** `spec/VERSION` · `spec/PROTOCOL_SUMMARY.md` (Status line, §8).
 
 ## 11. How do I check conformance? · ¿Cómo verifico la conformidad?
 
@@ -115,3 +116,53 @@ Cabuya is the fique cord — the fibre rope of the Colombian countryside;
 shared thread. The story lives on the website, not in the spec.
 
 **Sources:** none in the vendored spec — answer briefly and point at <https://cabuya.org/about>.
+
+## 14. Do I have to change my app's database? · ¿Tengo que cambiar la base de datos de mi app?
+
+No. The pack builds a **crosswalk** from the fields the app already has to
+`place`, and a serializer that emits the published copy — no migration of
+anyone's primary keys, no schema change, no new tables required. The internal
+model stays the publisher's own; the protocol standardizes only what is
+published.
+
+**Sources:** `spec/PROTOCOL_SUMMARY.md` (§5 ids: "no migration of anyone's primary keys"; The two premises) · the crosswalk itself: `implement/mapping/field-crosswalk.md`.
+
+## 15. Is the feed a file or an endpoint? · ¿El feed es un archivo o un endpoint?
+
+Either — they are the same feed. A static feed is a degenerate read API,
+byte-compatible per record, and the manifest declares whichever URL you
+serve. `places.json` is an example filename, not a rule; the only rule is a
+stable HTTPS URL declared in the manifest.
+
+**Sources:** `spec/PROTOCOL_SUMMARY.md` (§3) · `spec/schemas/manifest.schema.json` (`feeds[].url`).
+
+## 16. How do consumers display my records? · ¿Cómo muestran mis registros las otras apps?
+
+With origin and place in the same view — the canonical shape is
+`{name} — by {publisher} · {municipality_text}, {neighborhood_text}`, so a
+record republished in another city still says where it is and whose it is.
+Action buttons go to the record's `public_url` — the origin app — because
+contact values never travel in feeds.
+
+**Sources:** `spec/PROTOCOL_SUMMARY.md` (§6 Trust: contact and link-out) · `spec/schemas/place-feed.schema.json` (geography fields, `public_url`).
+
+## 17. What about help requests and donations? · ¿Y los pedidos de ayuda y las donaciones?
+
+0.1 carries `place` only. Help requests and offers (`need`/`offer`, with
+quantities) and damage reports are **proposed for v0.2 in RFC 0002 — a draft,
+not shipped**; do not promise dates. Goods requests will be org-level
+("shelter X needs 50 blankets"), never person-level. Money never travels
+through the protocol — donations are a link-out to the origin app.
+
+**Sources:** `spec/PROTOCOL_SUMMARY.md` (The one-paragraph version, §6) — the proposal itself is not vendored; point at <https://cabuya.org/rfcs>.
+
+## 18. How should I organize my app's data? · ¿Cómo debería organizar los datos de mi app?
+
+Your internal model is yours — the spec requires only what you publish. But
+if the app is still being built, or can adapt, the pack carries a
+**reference data model** whose five recommendations make the crosswalk nearly
+the identity function: structural PII separation, protocol-shaped entities,
+native honesty fields, geography as code + text from day one, and stable
+public ids with a `public_url` per record.
+
+**Sources:** `implement/mapping/reference-model.md` · `shared/pii-deny-list.md`.

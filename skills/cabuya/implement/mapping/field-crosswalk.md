@@ -4,6 +4,12 @@ The authoritative field list is the vendored schema,
 [`../../spec/schemas/place-feed.schema.json`](../../spec/schemas/place-feed.schema.json).
 This file is how you get from a real database to it.
 
+**Two on-ramps.** An existing app maps what it has: build the crosswalk below,
+column by column. A **new or adaptable app** starts from
+[`reference-model.md`](reference-model.md) instead — organize the internal
+model along its five recommendations and the crosswalk becomes nearly the
+identity function.
+
 `REQ`: **R** = required in Core · **C** = conditionally required · **O** =
 optional · **E** = Extended profile.
 
@@ -51,6 +57,25 @@ confirm the mapping of each marker.
 > them would discard two thirds of the reference implementation. Address
 > matching, meanwhile, succeeded on 100 % of observed duplicate cases where
 > name matching failed — which is why the locator is required at all.
+
+### Mapping location columns honestly
+
+Location is what lets a record travel: a consumer in another city renders
+`{name} — by {publisher} · {municipality_text}, {neighborhood_text}`, so what
+you map here is what every downstream reader will show.
+
+- **Free-text city column only** (`ciudad`, `municipio`, no code): map it
+  verbatim to `municipality_text` and set `municipality_code: null` — the
+  schema's escape hatch (a `null` code requires the text). Resolve codes
+  later via [`divipola.md`](divipola.md); **never guess a code**.
+- **Neighborhood** (`barrio`, `comuna`): `neighborhood_text`, verbatim,
+  dirty values included — it is uncontrolled by design in 0.1.
+- **Never claim a precision you don't have:** a map-click pin is
+  `geo_precision: "approximate"`; a geocoded address is `"centroid"` or
+  `"approximate"` per the geocoder's own answer; only device GPS or a
+  surveyed point is `"exact"`; and `"unknown"` is honest. Manufacturing
+  `"exact"` from a geocoder does downstream harm the same way mapping
+  `updated_at` into `last_confirmed_at` does (CR-1).
 
 ## Status — three orthogonal axes
 

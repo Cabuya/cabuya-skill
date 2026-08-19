@@ -177,3 +177,15 @@ setup() {
   # And nothing is still marked as unreleased.
   ! grep -q 'next release' "$REPO/SKILL.md"
 }
+
+# --- the display pattern (Task 7 of PLAN_product_clarity_overhaul) -------------
+
+@test "the canonical display shape carries origin and place together" {
+  says "$CONSUME" "{name} — by {publisher} · {municipality_text}, {neighborhood_text}"
+  says "$RULES" "{name} — by {publisher} · {municipality_text}, {neighborhood_text}"
+}
+
+@test "action buttons link out to the origin, never synthesized contact UI" {
+  says "$CONSUME" "never to contact UI you synthesize"
+  says "$RULES" "never to a contact UI the consumer synthesizes"
+}

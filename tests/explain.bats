@@ -49,9 +49,27 @@ setup() {
   says "$EXPLAIN" "not a file, not a scaffold, not a sample"
 }
 
-@test "the draft-status sentence is present" {
-  says "$EXPLAIN" "the specification is 0.1, a draft"
-  says "$QUESTIONS" "0.1, a draft"
+@test "the status sentence is present and claims no extra maturity" {
+  says "$EXPLAIN" "the specification is 0.1, normative"
+  says "$EXPLAIN" "never claim more maturity than the version number carries"
+  says "$QUESTIONS" "0.1, normative"
+}
+
+@test "the two premises are stated in the summary" {
+  SUMMARY="$REPO/spec/PROTOCOL_SUMMARY.md"
+  says "$SUMMARY" "unification will not happen"
+  says "$SUMMARY" "what is standardized is only the published copy"
+  says "$SUMMARY" "a join prohibition rather than a field omission"
+}
+
+@test "the newcomer questions cover database, transport, display, v0.2 and data organization" {
+  says "$QUESTIONS" "no migration of anyone's primary keys"
+  says "$QUESTIONS" "a static feed is a degenerate read API"
+  says "$QUESTIONS" "an example filename, not a rule"
+  says "$QUESTIONS" "by {publisher}"
+  says "$QUESTIONS" "proposed for v0.2 in RFC 0002"
+  says "$QUESTIONS" "a draft, not shipped"
+  says "$QUESTIONS" "reference data model"
 }
 
 @test "the listing sentence is present" {

@@ -81,6 +81,14 @@ Every foreign record shows its origin publisher and the age of
 than 7 days, or with `contradictions_active > 0`, are visually distinguished
 and **not silently hidden**.
 
+The canonical display shape puts origin and place in the same view:
+**`{name} — by {publisher} · {municipality_text}, {neighborhood_text}`** — so
+a Cali app showing a Pereira record says so. Draw the place from the record's
+own geography fields (`municipality_text`, `neighborhood_text`; resolve
+`municipality_code` through DIVIPOLA when the text is absent). Action buttons
+on a foreign record go to `public_url` — the origin app — never to contact UI
+you synthesize: contact values do not travel (§7.2).
+
 ## Generate the self-tests with the code
 
 Each of the six rules has one, in [`rules.md`](rules.md). Write them in the

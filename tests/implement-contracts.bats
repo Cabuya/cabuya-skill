@@ -189,3 +189,22 @@ assert 'publisher_id' in m['publisher'] and 'canonical_url' in m['publisher']
     'do not leave a placeholder in the file you commit'
   says "$REPO/implement/templates/CABUYA.md" 'every angle bracket must go'
 }
+
+# --- location mapping and the reference model (Task 7 of PLAN_product_clarity_overhaul)
+
+@test "the crosswalk maps free-text city names honestly" {
+  XWALK="$REPO/implement/mapping/field-crosswalk.md"
+  says "$XWALK" "map it verbatim to municipality_text and set municipality_code: null"
+  says "$XWALK" "never guess a code"
+  says "$XWALK" "Never claim a precision you don't have"
+}
+
+@test "the reference model exists, is non-normative, and the crosswalk forks to it" {
+  RM="$REPO/implement/mapping/reference-model.md"
+  [ -f "$RM" ]
+  says "$RM" "Non-normative, and says so up front"
+  says "$RM" "the crosswalk"
+  says "$RM" "nearly free"
+  says "$RM" "proposed for v0.2 in RFC 0002"
+  says "$REPO/implement/mapping/field-crosswalk.md" "the crosswalk becomes nearly the identity function"
+}

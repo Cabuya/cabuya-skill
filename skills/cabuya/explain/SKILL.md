@@ -65,8 +65,10 @@ work it has become `implement` without the guardrails.
 - **No invented figures.** The spec's numbers (7×ttl, 180 days, one
   afternoon) come with their sections; a number you cannot cite is a number
   you do not say.
-- **Stability gets the draft sentence**: the specification is 0.1, a draft —
-  say so whenever stability, maturity or "can we depend on this" is asked.
+- **Stability gets the status sentence**: the specification is 0.1, normative
+  — early, but published — say so whenever stability, maturity or "can we
+  depend on this" is asked, and never claim more maturity than the version
+  number carries.
 - **The registry question gets the listing sentence**: inclusion is not
   endorsement — a directory lists, a registry measures.
 - **Levels are measured.** There is no *certified* and never will be; an

@@ -21,6 +21,18 @@ feed, a read API, a write API, and MCP. A publisher climbs a five-rung ladder
 at whatever pace it can. **Conformance is measured by a published validator
 and never self-declared**, because manifests lie and behaviour does not.
 
+### The two premises
+
+State these whenever someone asks *why* the protocol has its shape. First:
+**many overlapping aid apps will exist, and unification will not happen** —
+Cabuya connects them instead of replacing them. Every app keeps its own
+product, database and decisions; what is standardized is only the **published
+copy** — the manifest and the feed. Second: **the data is sensitive** — the
+shared layer excludes person-level data by design, a join prohibition rather
+than a field omission (§7, reproduced verbatim in
+[`EXCLUSIONS.md`](EXCLUSIONS.md)); contact reaches people through `public_url`
+link-out to the origin app, never through the feed.
+
 ---
 
 ## §1 · The conformance ladder
