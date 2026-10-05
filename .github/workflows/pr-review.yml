@@ -164,7 +164,7 @@ jobs:
           # with broad local access; a persisted token on disk is an exfil
           # surface. The reviewer talks to the GitHub API in-process.
           persist-credentials: false
-      - uses: DailybotHQ/ai-diff-reviewer@v2
+      - uses: DailybotHQ/ai-diff-reviewer@v3
         with:
           provider: cursor
           api-key: ${{ secrets.CURSOR_API_KEY }}
